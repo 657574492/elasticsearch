@@ -64,4 +64,14 @@ public class QueryServiceTest {
     public void query11() throws IOException {
         queryService.query11();
     }
+
+    @Test
+    public void query12() throws IOException {
+        queryService.wildcardQuery();
+    }
+
+    @Test
+    public void query13() throws IOException {
+        queryService.prefixQuery();
+    }
 }
