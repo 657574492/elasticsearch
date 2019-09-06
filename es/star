@@ -1,0 +1,76 @@
+
+// star mapping映射
+PUT star
+{
+  "settings": {
+    "number_of_shards": 3
+    , "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc":{
+      "dynamic":"strict",
+      "properties" : {
+        "uid":{
+          "type": "keyword"
+        },
+        "username" :{
+          "type": "keyword"
+        },
+        "type" : {
+          "type": "keyword",
+          "eager_global_ordinals":true
+        },
+        "introduce" : {
+          "type": "text",
+          "analyzer": "ik_smart"
+        },
+        "content" : {
+          "type": "text",
+          "analyzer": "ik_smart"
+        },
+        "sex":{
+        "type":"byte"
+        },
+        "age" : {
+        "type": "integer"
+        },
+        "createDate" :{
+          "type":"long"
+        },
+        "updateDate" :{
+          "type":"long"
+        },
+        "productions" : {
+          "type":"nested",
+          "properties": {
+            "type":{
+              "type": "keyword",
+              "eager_global_ordinals":true
+            },
+            "name" :{
+              "type": "keyword"
+            },
+            "grade" : {
+              "type": "integer"
+            },
+             "createDate" :{
+              "type":"long"
+            }
+
+          }
+        }
+      }
+    }
+  }
+}
+
+// mapping 复制（数据复制）
+POST _reindex
+{
+  "source": {
+    "index": "star_document"
+  },
+  "dest": {
+    "index": "star"
+  }
+}

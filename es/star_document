@@ -1,0 +1,69 @@
+
+//es mapping 文件
+PUT star_document
+{
+  "settings": {
+    "number_of_shards": 3
+    , "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc":{
+      "dynamic":"strict",
+      "properties" : {
+        "uid":{
+          "type": "keyword"
+        },
+        "username" :{
+          "type": "keyword"
+        },
+        "type" : {
+          "type": "keyword",
+          "eager_global_ordinals":true
+        },
+        "introduce" : {
+          "type": "text",
+          "analyzer": "ik_smart"
+        },
+        "content" : {
+          "type": "text",
+          "index": false
+        },
+        "sex":{
+        "type":"byte"
+        },
+        "age" : {
+        "type": "integer"
+        },
+        "createDate" :{
+          "type":"long"
+        },
+        "updateDate" :{
+          "type":"long"
+        },
+        "productions" : {
+          "type":"nested",
+          "properties": {
+            "type":{
+              "type": "keyword",
+              "eager_global_ordinals":true
+            },
+            "name" :{
+              "type": "keyword"
+            },
+            "grade" : {
+              "type": "integer"
+            },
+             "createDate" :{
+              "type":"long"
+            }
+
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+

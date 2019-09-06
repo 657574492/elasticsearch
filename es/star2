@@ -1,0 +1,80 @@
+//es mapping _source 为false  文件
+PUT star2
+{
+  "settings": {
+    "number_of_shards": 3
+    , "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc":{
+      "_source":{
+      "enabled":false
+     },
+      "dynamic":"strict",
+      "properties" : {
+        "uid":{
+          "store":true,
+          "type": "keyword"
+        },
+        "username" :{
+          "store":true,
+          "type": "keyword"
+        },
+        "type" : {
+          "type": "keyword",
+          "eager_global_ordinals":true,
+          "store":true
+        },
+        "introduce" : {
+          "store":true,
+          "type": "text",
+          "analyzer": "ik_smart"
+        },
+        "content" : {
+          "store":true,
+          "type": "text",
+          "index": false
+        },
+        "sex":{
+         "store":true,
+        "type":"byte"
+        },
+        "age" : {
+          "store":true,
+        "type": "integer"
+        },
+        "createDate" :{
+          "store":true,
+          "type":"long"
+        },
+        "updateDate" :{
+          "store":true,
+          "type":"long"
+        },
+        "productions" : {
+          "type":"nested",
+          "properties": {
+            "type":{
+              "store":true,
+              "type": "keyword",
+              "eager_global_ordinals":true
+            },
+            "name" :{
+              "store":true,
+              "type": "keyword"
+            },
+            "grade" : {
+              "store":true,
+              "type": "integer"
+            },
+             "createDate" :{
+               "store":true,
+              "type":"long"
+            }
+
+          }
+        }
+      }
+    }
+  }
+}

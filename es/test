@@ -1,0 +1,21 @@
+
+//text 可以用term 查询
+PUT test
+{
+  "mappings": {
+    "_doc":{
+      "properties":{
+        "content":{
+          "type":"text",
+          "analyzer":"ik_smart",
+          "fields":{
+            "keyword":{
+              "type":"keyword",
+              "ignore_above":100
+            }
+          }
+        }
+      }
+    }
+  }
+}
