@@ -356,4 +356,70 @@ public class QueryService {
 
         }
     }
+
+    /**
+     *
+     * wildcard 通配符查询
+     * POST star/_search
+     * {
+     *   "query": {
+     *     "wildcard": {
+     *       "username": {
+     *         "value": "高圆*"
+     *       }
+     *     }
+     *   }
+     * }
+     */
+    public void wildcardQuery() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("star");
+        searchRequest.types("_doc");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.query(QueryBuilders.wildcardQuery("username","高圆*"));
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = response.getHits();
+
+        for (SearchHit hit : hits) {
+            String hitString = hit.getSourceAsString();
+            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            System.out.println(starDocument.toString());
+
+        }
+    }
+
+    /**
+     *
+     * prefix 指定前缀查询 效率高于 wildcard
+     * POST star/_search
+     * {
+     *   "query": {
+     *     "prefix": {
+     *       "username": {
+     *         "value": "高"
+     *       }
+     *     }
+     *   }
+     * }
+     */
+    public void prefixQuery() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("star");
+        searchRequest.types("_doc");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.query(QueryBuilders.prefixQuery("username","高圆"));
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = response.getHits();
+
+        for (SearchHit hit : hits) {
+            String hitString = hit.getSourceAsString();
+            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            System.out.println(starDocument.toString());
+
+        }
+    }
 }

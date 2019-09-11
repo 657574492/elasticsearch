@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * @Author: wangjunjie 2019/8/29 11:07
- * @Description: 查询自动补全
+ * @Description: 查询自动补全  效率好于 prefix wildcard
  * @Version: 1.0.0
  * @Modified By: xxx 2019/8/29 11:07
  */
