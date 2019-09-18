@@ -39,7 +39,8 @@ import java.util.Map;
  */
 
 @Service
-public class AnalyzeBucketService {
+public class
+AnalyzeBucketService {
 
     @Autowired
     private RestHighLevelClient rhlClient;
@@ -68,6 +69,52 @@ public class AnalyzeBucketService {
         sourceBuilder.size(0);
 
         AggregationBuilder aggregationBuilder = AggregationBuilders.terms("bucket_type").field("type");
+        sourceBuilder.aggregation(aggregationBuilder);
+
+        searchRequest.source(sourceBuilder);
+        SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
+        Aggregations aggregations = response.getAggregations();
+
+        Terms terms = aggregations.get("bucket_type");
+
+        List<? extends Terms.Bucket> buckets = terms.getBuckets();
+        for (Terms.Bucket bucket : buckets) {
+            System.out.println(bucket.getKey());
+            //类型数量
+            System.out.println(bucket.getDocCount());
+        }
+    }
+
+    /**
+     *
+     * 聚合查询bucket 一个字段不同数据 以字段数量进行排序（默认是以字段数量倒序排列）
+     * GET star_document/_search
+     * {
+     *   "size": 0,
+     *   "aggs": {
+     *     "terms_age": {
+     *       "terms": {
+     *         "field": "type",
+     *         "order": {
+     *           "_count": "desc"
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     * @throws IOException
+     */
+    public void analyzeQuery7() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("star_document");
+        searchRequest.types("_doc");
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.size(0);
+
+        AggregationBuilder aggregationBuilder = AggregationBuilders
+                .terms("bucket_type")
+                .field("type")
+                .order(BucketOrder.key(false));
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);

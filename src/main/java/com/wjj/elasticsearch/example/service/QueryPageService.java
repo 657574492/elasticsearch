@@ -90,6 +90,8 @@ public class QueryPageService {
      *   }
      * }
      * @param values
+     *
+     *
      * @return
      * @throws IOException
      */
@@ -99,7 +101,7 @@ public class QueryPageService {
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.sort("createDate",SortOrder.DESC);
-        sourceBuilder.sort("_doc",SortOrder.DESC);
+        sourceBuilder.sort("_id",SortOrder.DESC);
         sourceBuilder.size(2);
 
         // 如果第一页，则 values 为空

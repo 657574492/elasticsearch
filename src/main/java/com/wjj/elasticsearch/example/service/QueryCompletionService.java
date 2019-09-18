@@ -54,7 +54,7 @@ public class QueryCompletionService {
         SearchRequest searchRequest = new SearchRequest("star_completion");
         searchRequest.types("_doc");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.size(1);
+        sourceBuilder.size(0);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
         suggestBuilder.addSuggestion("username-suggester",
