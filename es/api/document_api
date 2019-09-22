@@ -1,0 +1,63 @@
+//文档相关api
+
+查询所有数据
+GET /star/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+分词查询
+GET person/content/_search
+{
+  "query": {
+    "match": {
+      "nickName2": {
+        "query": "韩雪高跟鞋",
+         "analyzer":"ik_max_word"
+      }
+    }
+  }
+}
+
+指定 id
+PUT /star/_doc/2
+{
+  "userName":"韩雪",
+  "sex":0,
+  "nickName":"韩雪最美高跟足弓",
+  "introduction":"最强大脑》录制韩雪秀大腿大气没毛病",
+  "createDate":1565765736649,
+  "pid":2
+}
+
+通过id获取数据
+GET /star/_doc/5
+
+
+查询所有数据
+GET /star/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+指定 id
+PUT /star/_doc/2
+{
+  "userName":"韩雪",
+  "sex":0,
+  "nickName":"韩雪最美高跟足弓",
+  "introduction":"最强大脑》录制韩雪秀大腿大气没毛病",
+  "createDate":1565765736649,
+  "pid":2
+}
+
+修改数据
+post /index/type/id/_update
+{
+   "doc": {
+      "要修改的少数几个field即可，不需要全量的数据"："对应field的数据"
+   }
+}

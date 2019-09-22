@@ -1,0 +1,39 @@
+nested 相关
+PUT my_movies
+{
+   "mappings" : {
+     "_doc" : {
+       "properties" : {
+      "actors" : {
+        "type": "nested",
+        "properties" : {
+          "first_name" : {"type" : "keyword"},
+          "last_name" : {"type" : "keyword"}
+        }},
+      "title" : {
+        "type" : "text",
+        "fields" : {"keyword":{"type":"keyword","ignore_above":256}}
+      }
+    }
+     }
+
+  }
+
+}
+
+POST my_movies/_doc/1
+{
+  "title":"Speed",
+  "actors":[
+    {
+      "first_name":"Keanu",
+      "last_name":"Reeves"
+    },
+
+    {
+      "first_name":"Dennis",
+      "last_name":"Hopper"
+    }
+
+  ]
+}

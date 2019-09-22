@@ -1,0 +1,120 @@
+// mapping 映射文件相关 api
+创建索引
+PUT /test_index
+{
+  "settings": {
+    "number_of_shards": 5,    //主分片数
+    "number_of_replicas": 1   //副本数
+  }
+}
+
+查询mapping
+GET star/_mapping?pretty
+
+删除索引
+DELETE /star2
+{
+  "acknowledged" : true,
+}
+
+Mapping 添加字段
+POST star2/_mapping/_doc
+{
+  "properties" : {
+      "address" : {
+        "type": "keyword"
+      }
+
+    }
+}
+
+打开聚合分析（提升速度 只能是 keyword 类型）
+PUT star2/_mapping/_doc
+{
+  "properties" : {
+      "type" : {
+        "type": "keyword",
+        "eager_global_ordinals":true
+      }
+    }
+}
+
+
+
+mapping 复制（数据复制）
+POST _reindex
+{
+  "source": {
+    "index": "copy1"   //旧数据
+  },
+  "dest": {
+    "index": "copy2"   //新数据
+  }
+}
+
+PUT my_star
+{
+  "settings": {
+    "index":{
+      "refresh_interval":"30s",  // 设置30秒刷新到 segment文件中 默认 1s （设置越大性能越好，但实时查询差）
+      "number_of_shards": 3,  //主分片数
+      "number_of_replicas": 1  //副本数
+    },
+    "routing": {
+      "allocation": {
+        "total_shards_per_node": -3  //限定每个索引在每个节点可分配的主分片数
+      }
+    },
+    "translog": {
+      "sync_interval":"30s",  // 设置每三十秒进行一次落盘
+      "durability":"async"  // 设置落盘请求为异步 （默认为同步）
+    }
+  },
+  "mappings": {
+    "_doc":{
+      "dynamic":false,    //避免不必要的索引
+      "properties":{
+        "username":{
+          "type":"keyword"
+        }
+      }
+    }
+  }
+}
+
+
+创建索引和mapping
+PUT star
+{
+  "mappings" : {
+
+    "_doc": {
+      "properties" : {
+      "userName" : {
+        "type": "keyword"
+      },
+      "sex":{
+        "type":"byte"
+      },
+      "age" : {
+        "type": "integer"
+      },
+      "nickName":{
+        "type": "text",
+        "analyzer": "ik_smart"
+      },
+      "introduction": {
+            "type": "text",
+            "index":false    // 不能搜索
+        },
+        "createDate" :{
+          "type":"long"
+        },
+        "pid": {
+            "type": "integer"
+          }
+    }
+  }
+}
+
+
