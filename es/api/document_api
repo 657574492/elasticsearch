@@ -14,7 +14,7 @@ GET person/content/_search
   "query": {
     "match": {
       "nickName2": {
-        "query": "韩雪高跟鞋",
+        "query": "韩雪",
          "analyzer":"ik_max_word"
       }
     }
@@ -26,8 +26,8 @@ PUT /star/_doc/2
 {
   "userName":"韩雪",
   "sex":0,
-  "nickName":"韩雪最美高跟足弓",
-  "introduction":"最强大脑》录制韩雪秀大腿大气没毛病",
+  "nickName":"韩雪,
+  "introduction":"最强大脑录制韩雪",
   "createDate":1565765736649,
   "pid":2
 }
@@ -48,8 +48,8 @@ PUT /star/_doc/2
 {
   "userName":"韩雪",
   "sex":0,
-  "nickName":"韩雪最美高跟足弓",
-  "introduction":"最强大脑》录制韩雪秀大腿大气没毛病",
+  "nickName":"韩雪",
+  "introduction":"最强大脑录制韩雪",
   "createDate":1565765736649,
   "pid":2
 }
