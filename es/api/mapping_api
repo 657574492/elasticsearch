@@ -14,7 +14,7 @@ GET star/_mapping?pretty
 删除索引
 DELETE /star2
 {
-  "acknowledged" : true,
+  "acknowledged" : true
 }
 
 Mapping 添加字段
@@ -116,5 +116,6 @@ PUT star
     }
   }
 }
+
 
 

@@ -22,7 +22,7 @@ public class IndexClassService {
         List<Production> arrayList = new ArrayList<>();
         Production production = new Production();
         production.setCreateDate(System.currentTimeMillis());
-        production.setGrade(32);
+        production.setGrade(34);
         production.setName("啥子电视剧哦");
         production.setType("电视剧");
         /*Production production2 = new Production();
@@ -33,15 +33,15 @@ public class IndexClassService {
         //arrayList.add(production);
 
         StarDocument starDocument = new StarDocument();
-        starDocument.setAge(35);
+        starDocument.setAge(40);
         starDocument.setContent("我不知道它和暴力熊谁好，我只知道这篇文章越到后面评价越简洁，明显是我在偷懒");
         starDocument.setIntroduce("买散热都会自带硅脂，比CPU散片送的垃圾硅脂要好。大霜塔及其大霜塔以下的风冷散热器不要换硅脂，用原装就行");
         starDocument.setCreateDate(System.currentTimeMillis());
         starDocument.setUpdateDate(System.currentTimeMillis());
         starDocument.setUsername("路人ABC");
-        starDocument.setType("路人");
-        starDocument.setUid("14");
-        starDocument.setSex(0);
+        starDocument.setType("美女");
+        starDocument.setUid("16");
+        starDocument.setSex(1);
         starDocument.setProductions(arrayList);
         return starDocument;
     }
