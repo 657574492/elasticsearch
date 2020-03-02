@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @Author: wangjunjie 2019/8/28 21:55
@@ -126,6 +127,41 @@ public class QueryScoreService {
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
+    }
+
+    /**
+     *    // 总分 = 最佳字段 + 0.3 * 其余字段
+     *    GET product/_search
+     *    {
+     *    "query": {
+     *    "multi_match": {
+     *    "query": "小米华为",
+     *    "fields": ["brandName","categoryName","title^10" ],
+     *    "tie_breaker": 0.3
+     *    }
+     *    }
+     *    }
+     */
+    public void test() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("product");
+        searchRequest.types("_doc");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+        String[] fields = {"brandName^10","categoryName","title"};
+        sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为",fields));
+
+        searchRequest.source(sourceBuilder);
+        SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        SearchHits hits = response.getHits();
+
+        System.out.println("toatal: "+hits.totalHits);
+        for (SearchHit hit : hits) {
+            String hitString = hit.getSourceAsString();
+            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
+            System.out.println(map);
+        }
+
     }
 
 }
