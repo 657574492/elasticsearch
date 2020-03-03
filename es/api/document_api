@@ -104,7 +104,7 @@ GET /product/_search
   }
 }
 
-//放大字段的得分  最佳字段
+// 放大字段的得分  最佳字段  （总分 "type": "most_fields"）
 GET product/_search
 {
   "query": {
@@ -149,3 +149,43 @@ GET star/_search
           }
         }
       }
+
+
+// query_string 方便用 AND OR NOT
+GET /product/_search
+{
+  "query": {
+    "query_string": {
+      "fields": ["title"],
+      "query": "小米 AND 体验"
+    }
+  }
+}
+
+
+//带过滤条件的查询
+GET /product/_search
+{
+  "query": {
+    "bool": {
+      "should": {
+        "match" :{
+          "title" : "华为"
+        }
+      },
+      "filter": [
+          {"term":{
+            "categoryName":"手机"
+            }
+          },
+          {
+            "range" :{
+              "price":{
+                "gte":4000
+              }
+            }
+          }
+        ]
+    }
+  }
+}

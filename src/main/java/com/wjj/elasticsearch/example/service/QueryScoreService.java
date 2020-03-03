@@ -95,7 +95,9 @@ public class QueryScoreService {
      *         "field": "createDate",
      *         "modifier": "log1p"
      *         , "factor": 2
-     *       }
+     *       },
+     *       "score_mode" :  "sum"  //field 之间相加(默认相乘)
+     *       "boost_mode" :  "sum"  //field 与 score 相乘(默认相乘)
      *     }
      *   }
      * }

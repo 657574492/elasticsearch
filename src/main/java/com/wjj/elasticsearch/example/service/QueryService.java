@@ -233,7 +233,6 @@ public class QueryService {
             System.out.println(starDocument.toString());
         }
     }
-
     /**
      *
      * 返回指定字段
