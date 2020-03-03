@@ -153,8 +153,9 @@ public class QueryScoreService {
         fields.put("brandName",10.0f);
         //fields.put("categoryName",1.0f);
         fields.put("title",1.0f);
-        //MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(fields);
 
+
+        //sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为").fields(fields).tieBreaker(0.1f));
         sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为").fields(fields));
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);

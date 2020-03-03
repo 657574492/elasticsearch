@@ -68,7 +68,7 @@ public class QueryService {
 
     /**
      *
-     * 普通查询 terms
+     * 普通查询 terms  条件只要一个配置就满足
      *POST star/_search
      * {
      *   "query": {

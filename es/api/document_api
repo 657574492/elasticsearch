@@ -104,7 +104,7 @@ GET /product/_search
   }
 }
 
-//放大字段的得分  最佳字段
+//放大字段的得分  默认最佳字段
 GET product/_search
 {
   "query": {
