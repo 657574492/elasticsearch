@@ -132,14 +132,13 @@ public class QueryScoreService {
     }
 
     /**
-     *    // 总分 = 最佳字段 + 0.3 * 其余字段
+     *    // 提高 某个字段的查询权重
      *    GET product/_search
      *    {
      *    "query": {
      *    "multi_match": {
      *    "query": "小米华为",
      *    "fields": ["brandName","title^10" ],
-     *    "tie_breaker": 0.3
      *    }
      *    }
      *    }
