@@ -8,6 +8,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -89,7 +91,7 @@ public class QueryScoreService {
      *     "function_score": {
      *       "query": {
      *         "match": {
-     *           "introduce": "女神"
+     *           "introduce": "分数"
      *         }
      *       },
      *       "field_value_factor": {
@@ -113,7 +115,7 @@ public class QueryScoreService {
                 .modifier(FieldValueFactorFunction.Modifier.LOG1P)
                 .factor(2f);
         FunctionScoreQueryBuilder scoreQueryBuilder = new FunctionScoreQueryBuilder(QueryBuilders
-                .matchQuery("introduce", "女神"), fvffb);
+                .matchQuery("introduce", "分数"), fvffb);
         sourceBuilder.query(scoreQueryBuilder);
 
         searchRequest.source(sourceBuilder);
@@ -136,7 +138,7 @@ public class QueryScoreService {
      *    "query": {
      *    "multi_match": {
      *    "query": "小米华为",
-     *    "fields": ["brandName","categoryName","title^10" ],
+     *    "fields": ["brandName","title^10" ],
      *    "tie_breaker": 0.3
      *    }
      *    }
@@ -147,9 +149,14 @@ public class QueryScoreService {
         searchRequest.types("_doc");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 
-        String[] fields = {"brandName^10","categoryName","title"};
-        sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为",fields));
+        //String[] fields = {"brandName^10","categoryName","title"};
+        HashMap<String, Float> fields = new HashMap<>();
+        fields.put("brandName",10.0f);
+        //fields.put("categoryName",1.0f);
+        fields.put("title",1.0f);
+        //MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(fields);
 
+        sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为").fields(fields));
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
 
