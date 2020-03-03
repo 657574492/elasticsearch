@@ -20,6 +20,6 @@ public class QueryScoreServiceTest {
 
     @Test
     public void queryScore1() throws IOException {
-        queryScoreService.queryScore1();
+        queryScoreService.test();
     }
 }

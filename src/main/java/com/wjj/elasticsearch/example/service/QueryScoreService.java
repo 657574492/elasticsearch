@@ -8,6 +8,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: wangjunjie 2019/8/28 21:55
@@ -88,7 +91,7 @@ public class QueryScoreService {
      *     "function_score": {
      *       "query": {
      *         "match": {
-     *           "introduce": "女神"
+     *           "introduce": "分数"
      *         }
      *       },
      *       "field_value_factor": {
@@ -114,7 +117,7 @@ public class QueryScoreService {
                 .modifier(FieldValueFactorFunction.Modifier.LOG1P)
                 .factor(2f);
         FunctionScoreQueryBuilder scoreQueryBuilder = new FunctionScoreQueryBuilder(QueryBuilders
-                .matchQuery("introduce", "女神"), fvffb);
+                .matchQuery("introduce", "分数"), fvffb);
         sourceBuilder.query(scoreQueryBuilder);
 
         searchRequest.source(sourceBuilder);
@@ -128,6 +131,46 @@ public class QueryScoreService {
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
+    }
+
+    /**
+     *    // 提高 某个字段的查询权重
+     *    GET product/_search
+     *    {
+     *    "query": {
+     *    "multi_match": {
+     *    "query": "小米华为",
+     *    "fields": ["brandName","title^10" ],
+     *    }
+     *    }
+     *    }
+     */
+    public void test() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("product");
+        searchRequest.types("_doc");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+        //String[] fields = {"brandName^10","categoryName","title"};
+        HashMap<String, Float> fields = new HashMap<>();
+        fields.put("brandName",10.0f);
+        //fields.put("categoryName",1.0f);
+        fields.put("title",1.0f);
+
+
+        //sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为").fields(fields).tieBreaker(0.1f));
+        sourceBuilder.query(QueryBuilders.multiMatchQuery("小米华为").fields(fields));
+        searchRequest.source(sourceBuilder);
+        SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        SearchHits hits = response.getHits();
+
+        System.out.println("toatal: "+hits.totalHits);
+        for (SearchHit hit : hits) {
+            String hitString = hit.getSourceAsString();
+            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
+            System.out.println(map);
+        }
+
     }
 
 }

@@ -104,7 +104,7 @@ GET /product/_search
   }
 }
 
-// 放大字段的得分  最佳字段  （总分 "type": "most_fields"）
+//放大字段的得分  默认最佳字段
 GET product/_search
 {
   "query": {
@@ -121,7 +121,7 @@ GET product/_search
 {
   "query": {
     "multi_match": {
-      "query": "小米华为韩雪",
+      "query": "小米华为",
       "fields": ["brandName","categoryName","title^10","subTitle"],
       "tie_breaker": 0.3
     }

@@ -39,8 +39,7 @@ import java.util.Map;
  */
 
 @Service
-public class
-AnalyzeBucketService {
+public class AnalyzeBucketService {
 
     @Autowired
     private RestHighLevelClient rhlClient;
@@ -133,7 +132,7 @@ AnalyzeBucketService {
 
     /**
      *
-     * 聚合查询bucket 嵌套
+     * 聚合查询bucket 嵌套 top_hits 展示分组后的数据详情
      * GET star_document/_search
      * {
      *   "size": 0,
