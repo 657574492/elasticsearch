@@ -118,4 +118,54 @@ PUT star
 }
 
 
+PUT /shop
+{
+  "settings": {
+    "number_of_shards": 1
+    , "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc" : {
+      "dynamic":false,
+      "properties" : {
+        "id":{
+          "type":"integer"
+        },
+        "name":{
+          "type":"text",
+          "analyzer": "ik_max_word",
+          "search_analyzer":"ik_smart"    //查询条件分词
+        },
+        "tags":{
+          "type":"text",
+          "analyzer":"whitespace",   //按空格分词
+          "fielddata":true          //开启聚合分析
+        },
+        "location":{
+          "type": "geo_point"    //地点坐标
+        },
+        "remark_score":{
+          "type":"double"
+        },
+        "category_id":{
+          "type":"integer"
+        },
+        "category_name":{
+          "type":"keyword"
+        },
+        "sell_id":{
+          "type":"integer"
+        },
+        "seller_remark_score":{
+          "type":"double"
+        },
+        "seller_disabled_flag":{
+          "type":"integer"
+        }
+      }
+    }
+  }
+}
+
+
 
