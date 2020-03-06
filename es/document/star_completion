@@ -1,4 +1,4 @@
-//mapping 文件
+//mapper 文件
 // username 字段自动补全
 PUT star_completion
 {

@@ -1,0 +1,120 @@
+PUT /shop
+{
+  "settings": {
+    "number_of_shards": 1
+    , "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc" : {
+      "dynamic":false,
+      "properties" : {
+        "id":{
+          "type":"integer"
+        },
+        "name":{
+          "type":"text",
+          "analyzer": "ik_max_word",
+          "search_analyzer":"ik_smart"    //查询条件分词
+        },
+        "tags":{
+          "type":"text",
+          "analyzer":"whitespace",   //按空格分词
+          "fielddata":true          //开启聚合分析
+        },
+        "location":{
+          "type": "geo_point"    //地点坐标
+        },
+        "remark_score":{
+          "type":"double"
+        },
+        "category_id":{
+          "type":"integer"
+        },
+        "category_name":{
+          "type":"keyword"
+        },
+        "sell_id":{
+          "type":"integer"
+        },
+        "seller_remark_score":{
+          "type":"double"
+        },
+        "seller_disabled_flag":{
+          "type":"integer"
+        }
+      }
+    }
+  }
+}
+
+
+GET shop/_search
+{
+  "_source": "*",
+  "script_fields": {
+    "distance": {
+      "script": {
+        "source":"haversin(lat,lon,doc['location'].lat,doc['location'].lon)",
+        "lang":"expression",
+        "params": {"lat":31.23916171,"lon":121.48789949}
+      }
+    }
+  },
+  "query": {
+    "function_score": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {
+                "name": {
+                  "query": "凯悦",
+                   "boost":0.1
+                }
+              }
+            },
+            {
+              "term": {
+               "seller_disabled_flag": 0
+              }
+            }
+          ]
+        }
+      },
+      "functions": [
+        {
+          "gauss": {
+            "location": {
+              "origin": "31.23916171,121.48789949",
+              "scale": "100km",
+              "offset": "0km",
+              "decay": 0.5
+            }
+          },
+          "weight": 9
+        },
+        {
+          "field_value_factor": {
+            "field": "remark_score"
+          },
+          "weight": 0.2
+        },
+        {
+          "field_value_factor": {
+            "field": "seller_remark_score"
+          },
+          "weight": 0.1
+        }
+      ],
+      "score_mode": "sum",
+      "boost_mode": "sum"
+    }
+  },
+  "sort": [
+    {
+      "_score": {
+        "order": "desc"
+      }
+    }
+  ]
+}
