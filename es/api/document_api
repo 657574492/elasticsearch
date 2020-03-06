@@ -36,13 +36,7 @@ PUT /star/_doc/2
 GET /star/_doc/5
 
 
-查询所有数据
-GET /star/_search
-{
-  "query": {
-    "match_all": {}
-  }
-}
+
 指定 id
 PUT /star/_doc/2
 {
