@@ -1,4 +1,4 @@
-//es mapping _source 为false  文件
+//es mapper _source 为false  文件
 PUT star2
 {
   "settings": {

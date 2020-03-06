@@ -8,3 +8,34 @@ wjj:
   name: wjj
 
 
+spring:
+  datasource:
+    name: tjtt
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://39.106.193.32:3306/imooc_dianping?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 921210
+    maxActive: 20
+    minIdle: 5
+    initialSize: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 10
+    testWhileIdle: true
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,lombok
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+
+# 分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

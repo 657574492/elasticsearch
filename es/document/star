@@ -64,7 +64,7 @@ PUT star
   }
 }
 
-// mapping 复制（数据复制）
+// mapper 复制（数据复制）
 POST _reindex
 {
   "source": {

@@ -1,6 +1,7 @@
-package com.wjj.elasticsearch.shop.common;
+/*
+compackage com.wjj.elasticsearch.shop.common;
 
-import com.imooc.dianping.controller.admin.AdminController;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -48,3 +49,4 @@ public class ControllerAspect {
         }
     }
 }
+*/

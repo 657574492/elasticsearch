@@ -1,5 +1,5 @@
 
-//es mapping 文件
+//es mapper 文件
 PUT star_document
 {
   "settings": {

@@ -1,4 +1,4 @@
-// mapping 映射文件相关 api
+// mapper 映射文件相关 api
 创建索引
 PUT /test_index
 {
@@ -41,7 +41,7 @@ PUT star2/_mapping/_doc
 
 
 
-mapping 复制（数据复制）
+mapper 复制（数据复制）
 POST _reindex
 {
   "source": {
