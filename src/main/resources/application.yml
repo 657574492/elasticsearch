@@ -12,7 +12,7 @@ spring:
   datasource:
     name: tjtt
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://39.106.193.32:3306/imooc_dianping?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://39.106.193.32:3306/imooc_dianping?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 921210
     maxActive: 20

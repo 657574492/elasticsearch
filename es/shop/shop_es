@@ -48,6 +48,7 @@ PUT /shop
 }
 
 
+// 商品搜索
 GET shop/_search
 {
   "_source": "*",
