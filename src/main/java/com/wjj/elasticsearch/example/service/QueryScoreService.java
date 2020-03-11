@@ -1,5 +1,6 @@
 package com.wjj.elasticsearch.example.service;
 
+import com.alibaba.druid.sql.builder.FunctionBuilder;
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
 import org.apache.lucene.queries.function.FunctionScoreQuery;
@@ -99,8 +100,8 @@ public class QueryScoreService {
      *         "modifier": "log1p"
      *         , "factor": 2
      *       },
-     *       "score_mode" :  "sum"  //field 之间相加(默认相乘)
-     *       "boost_mode" :  "sum"  //field 与 score 相乘(默认相乘)
+     *       "score_mode" :  "sum"  //field factor 之间相加(默认相乘)
+     *       "boost_mode" :  "sum"  //field 与 查询 score 相乘(默认相乘) "replace" 查询内容不影响得分
      *     }
      *   }
      * }
@@ -116,6 +117,8 @@ public class QueryScoreService {
                 .fieldValueFactorFunction("age")
                 .modifier(FieldValueFactorFunction.Modifier.LOG1P)
                 .factor(2f);
+
+
         FunctionScoreQueryBuilder scoreQueryBuilder = new FunctionScoreQueryBuilder(QueryBuilders
                 .matchQuery("introduce", "分数"), fvffb);
         sourceBuilder.query(scoreQueryBuilder);

@@ -167,5 +167,17 @@ PUT /shop
   }
 }
 
+//重构索引 （一般用于添加分词）
+POST /shop/_update_by_query
+{
+    "query":{
+        "bool" :{
+            {"term":{"name":"凯"}}
+            {"term":{"name":"悦"}}
+        }
+    }
+}
+
+
 
 
