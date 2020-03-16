@@ -183,3 +183,29 @@ GET /product/_search
     }
   }
 }
+
+// 高亮查询
+GET shop/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"match": {
+          "name": "酒店"
+        }},{
+          "match": {
+            "category_name": "酒店"
+          }
+        }
+      ]
+    }
+  },
+  "highlight": {
+    "fields": {
+      "name": {},
+      "category_name":{}
+    },
+    "pre_tags": "<b class='key' style='color:red'>",
+    "post_tags": "</b>"
+  }
+}
