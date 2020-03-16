@@ -36,13 +36,7 @@ PUT /star/_doc/2
 GET /star/_doc/5
 
 
-查询所有数据
-GET /star/_search
-{
-  "query": {
-    "match_all": {}
-  }
-}
+
 指定 id
 PUT /star/_doc/2
 {
@@ -149,3 +143,43 @@ GET star/_search
           }
         }
       }
+
+
+// query_string 方便用 AND OR NOT
+GET /product/_search
+{
+  "query": {
+    "query_string": {
+      "fields": ["title"],
+      "query": "小米 AND 体验"
+    }
+  }
+}
+
+
+//带过滤条件的查询
+GET /product/_search
+{
+  "query": {
+    "bool": {
+      "should": {
+        "match" :{
+          "title" : "华为"
+        }
+      },
+      "filter": [
+          {"term":{
+            "categoryName":"手机"
+            }
+          },
+          {
+            "range" :{
+              "price":{
+                "gte":4000
+              }
+            }
+          }
+        ]
+    }
+  }
+}

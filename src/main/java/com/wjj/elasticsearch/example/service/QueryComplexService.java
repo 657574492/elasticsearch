@@ -177,7 +177,7 @@ public class QueryComplexService {
 
     /**
      * 单字段多字符串查询
-     * cross_fields 所有的字段视为一个大的字段
+     * cross_fields 以分词为单位计算栏位的总分，适用于词导向的匹配
      *
      * GET star/_search
      * {
