@@ -209,3 +209,59 @@ GET shop/_search
     "post_tags": "</b>"
   }
 }
+
+//查询并重构索引
+POST /shop/_update_by_query
+{
+  "query":{
+    "bool":{
+      "must": [
+        {"term":{"name":"凯"}},
+        {"term":{"name":"悦"}}
+      ]
+    }
+  }
+}
+
+//同义词
+PUT /shop
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "analysis": {
+      "filter": {
+        "my_synonym_filter":{
+          "type":"synonym",
+          "synonyms_path":"analysis-ik/synonyms.txt"
+        }
+      },
+      "analyzer": {
+        "ik_syno":{
+          "type":"custom",
+          "tokenizer":"ik_smart",
+          "filter":["my_synonym_filter"]
+        },
+        "ik_syno_max":{
+          "type":"custom",
+          "tokenizer":"ik_max_word",
+          "filter":["my_synonym_filter"]
+        }
+      }
+    }
+  },
+  "mappings": {
+      "dynamic":false,
+      "properties" : {
+        "id":{
+          "type":"integer"
+        },
+        "name":{
+          "type":"text",
+          "analyzer": "ik_syno_max",
+          "search_analyzer":"ik_syno"
+        }
+      }
+
+  }
+}
