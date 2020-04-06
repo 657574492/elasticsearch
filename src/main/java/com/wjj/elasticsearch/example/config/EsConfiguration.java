@@ -3,7 +3,10 @@ package com.wjj.elasticsearch.example.config;
 import com.wjj.elasticsearch.example.config.properties.EsProperties;
 import com.wjj.elasticsearch.example.config.properties.WjjProperties;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig.Builder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -45,6 +48,8 @@ public class EsConfiguration {
         }
 
         RestClientBuilder restClientBuilder = RestClient.builder(hosts.toArray(new HttpHost[0]));
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("elastic","123456"));
 
         // 异步httpclient连接延时配置
        restClientBuilder.setRequestConfigCallback(new RequestConfigCallback() {
@@ -63,6 +68,7 @@ public class EsConfiguration {
             public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
                 httpClientBuilder.setMaxConnTotal(maxConnectNum);
                 httpClientBuilder.setMaxConnPerRoute(maxConnectPerRoute);
+                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                 return httpClientBuilder;
             }
 
