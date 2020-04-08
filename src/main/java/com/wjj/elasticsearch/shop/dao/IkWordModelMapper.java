@@ -12,7 +12,7 @@ import java.util.Map;
 public interface IkWordModelMapper {
 
 
-    List<IkWordModel> selectAll();
+    List<IkWordModel> listIkWord();
 
-
+    List<IkWordModel> listIkWordByTime(@Param("time")Long time);
 }
