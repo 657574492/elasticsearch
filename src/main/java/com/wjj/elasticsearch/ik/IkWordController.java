@@ -18,8 +18,8 @@ import java.util.List;
  * @description ik分词 热更新
  */
 
-@Controller
-@RequestMapping("/ik")
+//@Controller
+//@RequestMapping("/ik")
 public class IkWordController {
 
     @Autowired

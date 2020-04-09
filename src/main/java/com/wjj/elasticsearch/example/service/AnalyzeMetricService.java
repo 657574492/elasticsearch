@@ -8,12 +8,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.metrics.cardinality.CardinalityAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.cardinality.ParsedCardinality;
-import org.elasticsearch.search.aggregations.metrics.max.ParsedMax;
-import org.elasticsearch.search.aggregations.metrics.min.ParsedMin;
-import org.elasticsearch.search.aggregations.metrics.stats.ParsedStats;
-import org.elasticsearch.search.aggregations.metrics.stats.StatsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +61,7 @@ public class AnalyzeMetricService {
         SearchHits hits = response.getHits();
 
         //查询的数据总数
-        System.out.println("...total: "+hits.totalHits);
+        //System.out.println("...total: "+hits.totalHits);
 
         Map<String, Aggregation> asMap = response.getAggregations().asMap();
         ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");
@@ -114,8 +109,8 @@ public class AnalyzeMetricService {
 
         SearchHits hits = response.getHits();
 
-        //查询的数据总数
-        System.out.println("...total: "+hits.totalHits);
+        //查询的数据总数 todo
+        //System.out.println("...total: "+hits.totalHits);
 
         Map<String, Aggregation> asMap = response.getAggregations().asMap();
         ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");

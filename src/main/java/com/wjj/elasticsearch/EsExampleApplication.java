@@ -1,6 +1,6 @@
 package com.wjj.elasticsearch;
 
-import com.wjj.elasticsearch.example.config.properties.WjjProperties;
+import com.wjj.elasticsearch.config.properties.WjjProperties;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

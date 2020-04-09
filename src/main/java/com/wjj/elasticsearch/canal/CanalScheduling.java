@@ -1,4 +1,4 @@
-package com.wjj.elasticsearch.example.canal;
+package com.wjj.elasticsearch.canal;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
@@ -10,6 +10,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author EDZ
+ * @author wangjunjie
  * @date 2020/4/7
  * @description TODO
  */
 
 @Component
+@EnableScheduling
 public class CanalScheduling implements Runnable {
 
     @Autowired
@@ -97,7 +99,7 @@ public class CanalScheduling implements Runnable {
     }
 
     private void indexES(Map<String,Object> dataMap,String database,String table) throws IOException {
-        if(!StringUtils.equals("dianpingdb",database)){
+        if(!StringUtils.equals("imooc_dianping",database)){
             return;
         }
 

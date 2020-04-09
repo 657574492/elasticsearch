@@ -1,4 +1,4 @@
-package com.wjj.elasticsearch.example.config.properties;
+package com.wjj.elasticsearch.config.properties;
 
 /**
  * @Author: wangjunjie 2019/8/15 16:12

@@ -25,8 +25,8 @@ import java.util.List;
  * @description ik 查询并重构索引
  */
 
-@Configuration
-@EnableScheduling
+//@Configuration
+//@EnableScheduling
 public class IkWordScheduleTask {
 
     @Autowired

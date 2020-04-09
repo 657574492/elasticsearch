@@ -1,4 +1,4 @@
-package com.wjj.elasticsearch.example.config.properties;
+package com.wjj.elasticsearch.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

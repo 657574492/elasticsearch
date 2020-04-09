@@ -1,7 +1,7 @@
-package com.wjj.elasticsearch.example.config;
+package com.wjj.elasticsearch.config;
 
-import com.wjj.elasticsearch.example.config.properties.EsProperties;
-import com.wjj.elasticsearch.example.config.properties.WjjProperties;
+import com.wjj.elasticsearch.config.properties.EsProperties;
+import com.wjj.elasticsearch.config.properties.WjjProperties;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
