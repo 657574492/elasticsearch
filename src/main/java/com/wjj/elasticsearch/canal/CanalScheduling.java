@@ -11,6 +11,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class CanalScheduling  {
+public class CanalScheduling  implements CommandLineRunner {
 
     @Autowired
     private ShopModelMapper shopModelMapper;
@@ -40,8 +41,9 @@ public class CanalScheduling  {
     private RestHighLevelClient rhlClient;
 
 
-    @PostConstruct
-    public void run() {
+
+    @Override
+    public void run(String... args) {
         while (true) {
             long batchId = -1;
             try {
