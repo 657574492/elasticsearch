@@ -1,0 +1,97 @@
+PUT movies
+{
+   "settings": {
+    "number_of_shards": 1
+    , "number_of_replicas": 1
+  },
+   "mappings" : {
+     "_doc" : {
+       "dynamic":false,
+       "properties" : {
+          "actors" : {
+            "type": "nested",
+            "properties" : {
+              "first_name" : {"type" : "keyword"},
+              "last_name" : {"type" : "keyword"}
+            }
+          },
+          "type" : {
+            "type" : "keyword"
+          },
+          "title":{
+            "type":"text",
+          "analyzer": "ik_max_word",
+          "search_analyzer":"ik_smart"
+          },
+          "label":{
+            "type" : "keyword"
+          }
+       }
+     }
+  }
+}
+
+GET movies/_search
+{
+	"query": {
+		"bool": {
+			"must": [{
+				"term": {
+					"type": {
+						"value": "2"
+					}
+				}
+			}, {
+				"nested": {
+					"path": "actors",
+					"query": {
+						"bool": {
+							"must": [{
+								"term": {
+									"actors.first_name": {
+										"value": "张"
+									}
+								}
+							}, {
+								"term": {
+									"actors.last_name": {
+										"value": "译"
+									}
+								}
+							}]
+						}
+					}
+				}
+			}]
+		}
+
+	}
+}
+
+
+GET movies/_search
+{
+  "query": {
+
+    "nested": {
+      "path": "actors",
+      "query": {
+        "bool": {
+          "must": [
+            {"term": {
+              "actors.first_name": {
+                "value": "张"
+              }
+            }},{
+              "term": {
+                "actors.last_name": {
+                  "value": "译"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

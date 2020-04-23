@@ -1,7 +1,7 @@
 
 wjj:
   es:
-    - host: 192.168.0.100
+    - host: 39.106.193.32
       port: 9200
 #    - host: 192.168.0.166
 #      port: 9200
@@ -12,7 +12,7 @@ spring:
   datasource:
     name: tjtt
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.0.100:3306/imooc_dianping?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://39.106.193.32:3306/imooc_dianping?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
     maxActive: 20

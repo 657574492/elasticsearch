@@ -48,8 +48,8 @@ public class EsConfiguration {
         }
 
         RestClientBuilder restClientBuilder = RestClient.builder(hosts.toArray(new HttpHost[0]));
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("elastic","123456"));
+        //BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        //credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("elastic","123456"));
 
         // 异步httpclient连接延时配置
        restClientBuilder.setRequestConfigCallback(new RequestConfigCallback() {
@@ -68,7 +68,7 @@ public class EsConfiguration {
             public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
                 httpClientBuilder.setMaxConnTotal(maxConnectNum);
                 httpClientBuilder.setMaxConnPerRoute(maxConnectPerRoute);
-                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                //httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                 return httpClientBuilder;
             }
 
