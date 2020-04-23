@@ -33,4 +33,5 @@ public class EsIndexController {
                 new BigDecimal("31.23916171"),"凯悦",
                 null,2,null);
     }
+
 }

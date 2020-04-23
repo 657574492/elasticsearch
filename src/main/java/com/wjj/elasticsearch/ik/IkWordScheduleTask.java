@@ -25,8 +25,8 @@ import java.util.List;
  * @description ik 查询并重构索引
  */
 
-//@Configuration
-//@EnableScheduling
+@Configuration
+@EnableScheduling
 public class IkWordScheduleTask {
 
     @Autowired
@@ -34,12 +34,12 @@ public class IkWordScheduleTask {
     @Autowired
     private IkWordModelMapper ikWordModelMapper;
 
-    //@Scheduled(cron = "0 0/10 * * * ? ")
+    @Scheduled(cron = "0 0/1 * * * ? ")
     public void queryUpdateIkWord() throws IOException {
 
         //查询20分钟之内新添加的热词
-        long preTime = System.currentTimeMillis() - 20 * 60 * 1000;
-        List<IkWordModel> wordModelList = ikWordModelMapper.listIkWordByTime(preTime);
+        //long preTime = System.currentTimeMillis() - 20 * 60 * 1000;
+        List<IkWordModel> wordModelList = ikWordModelMapper.listIkWordByTime(0L);
         if (wordModelList == null || wordModelList.size() == 0) {
             return;
         }

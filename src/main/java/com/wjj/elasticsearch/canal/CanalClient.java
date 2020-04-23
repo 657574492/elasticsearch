@@ -1,4 +1,4 @@
-package com.wjj.elasticsearch.example.canal;
+package com.wjj.elasticsearch.canal;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
@@ -27,7 +27,8 @@ public class CanalClient implements DisposableBean {
                 new InetSocketAddress("192.168.0.100", 11111))
                 , "example", "canal", "123456");
         myCanalConnector.connect();
-        myCanalConnector.subscribe();
+        //只关注 imooc_dianping.shop,imooc_dianping.category 两个表的变化
+        myCanalConnector.subscribe("imooc_dianping.shop,imooc_dianping.category");
         myCanalConnector.rollback();
         return myCanalConnector;
 

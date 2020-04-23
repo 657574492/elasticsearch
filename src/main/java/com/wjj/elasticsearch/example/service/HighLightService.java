@@ -57,7 +57,7 @@ public class HighLightService {
         SearchResponse response = rhlclient.search(request, RequestOptions.DEFAULT);
 
         SearchHits hits = response.getHits();
-        System.out.println(" total:"+hits.totalHits);
+        //System.out.println(" total:"+hits.totalHits);
 
         for (SearchHit hit : hits) {
             System.out.println("----------------");
