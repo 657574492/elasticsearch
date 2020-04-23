@@ -95,3 +95,78 @@ GET movies/_search
     }
   }
 }
+
+GET movies/_search
+{
+  "size": 0,
+  "aggs": {
+    "count_first": {
+      "nested": {
+        "path": "actors"
+      },
+       "aggs":{
+        "cardinality_nested":{
+          "cardinality": {
+            "field": "actors.first_name"
+          }
+        }
+      }
+    }
+
+  }
+}
+
+
+GET movies/_search
+{
+ "size": 0,
+  "aggs": {
+    "count_first": {
+      "nested": {
+        "path": "actors"
+      },
+       "aggs":{
+        "cardinality_nested":{
+          "terms": {
+            "field": "actors.last_name"
+          },
+          "aggs":{
+            "test":{
+              "cardinality": {
+                "field": "type"
+              }
+            }
+          }
+        }
+
+      }
+    }
+
+  },
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "type": {
+              "value": "2"
+            }
+          }
+        },
+        {
+          "nested": {
+            "path": "actors",
+            "query": {
+              "term": {
+                "actors.first_name": {
+                  "value": "张"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+
+  }
+}
