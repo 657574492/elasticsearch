@@ -1,0 +1,81 @@
+PUT movies/_doc/1
+{
+	"title": "我的团长我的团",
+	"actors": [{
+		"first_name": "张",
+		"last_name": "译"
+	}, {
+		"first_name": "段",
+		"last_name": "奕宏"
+	}, {
+		"first_name": "张",
+		"last_name": "国强"
+	}],
+	"type": "2",
+	"label": ["历史", "战争"]
+}
+
+{
+	"title": "追凶者也",
+	"actors": [{
+		"first_name": "张",
+		"last_name": "译"
+	}, {
+		"first_name": "刘",
+		"last_name": "烨"
+	}],
+	"type": "1",
+	"label": ["喜剧", "剧情", "犯罪"]
+}
+
+PUT movies/_doc/20
+{
+	"title": "长安十二时辰",
+	"actors": [{
+		"first_name": "雷",
+		"last_name": "佳音"
+	}, {
+		"first_name": "易烊",
+		"last_name": "千玺"
+	}, {
+		"first_name": "热",
+		"last_name": "依扎"
+	}],
+	"type": "2",
+	"label": ["历史", "古装", "悬疑"]
+}
+
+PUT movies/_doc/5
+{
+	"title": "士兵突击",
+	"actors": [{
+		"first_name": "张",
+		"last_name": "译"
+	}, {
+		"first_name": "段",
+		"last_name": "奕宏"
+	}, {
+		"first_name": "张",
+		"last_name": "国强"
+	}, {
+		"first_name": "王",
+		"last_name": "国强"
+	}],
+	"type": "2",
+	"label": ["剧情","军事","战争"]
+}
+
+{
+	"title": "自己创建1",
+	"actors": [{
+		"first_name": "张",
+		"last_name": "蕾"
+	}, {
+		"first_name": "王",
+		"last_name": "译"
+	}],
+	"type": "2",
+	"label": ["剧情","动作"]
+}
+
+
