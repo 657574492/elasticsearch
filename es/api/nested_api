@@ -3,7 +3,7 @@ PUT my_movies
 {
    "mappings" : {
      "_doc" : {
-       "properties" : {
+     "properties" : {
       "actors" : {
         "type": "nested",
         "properties" : {

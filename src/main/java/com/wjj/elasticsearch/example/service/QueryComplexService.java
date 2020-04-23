@@ -78,7 +78,7 @@ public class QueryComplexService {
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
 
-        //System.out.println("toatal: "+hits.totalHits);
+        //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
@@ -130,7 +130,7 @@ public class QueryComplexService {
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
 
-        //System.out.println("toatal: "+hits.totalHits);
+        //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
@@ -167,7 +167,7 @@ public class QueryComplexService {
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
 
-        //System.out.println("toatal: "+hits.totalHits);
+        //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
@@ -204,7 +204,7 @@ public class QueryComplexService {
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
 
-        //System.out.println("toatal: "+hits.totalHits);
+        //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);

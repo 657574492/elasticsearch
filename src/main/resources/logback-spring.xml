@@ -10,18 +10,18 @@
 
     <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
             <pattern>
-                %d [%thread] %-5level %logger{36} %line - %msg%n
+               elasticsearch-api %d [%thread] %-5level %logger{36} %line - %msg%n
             </pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>
-                /Users/wangjunjie/Documents/java/code/var/order/info.%d.log
+                /usr/var/log/info.%d.log
                 <!--G:\\var\\alldata\\test\\info.%d.log-->
             </fileNamePattern>
             <!--日志文件保留天数-->
@@ -35,12 +35,12 @@
         </filter>
         <encoder>
             <pattern>
-                %d [%thread] %-5level %logger{36} %line - %msg%n
+                elasticsearch-api %d [%thread] %-5level %logger{36} %line - %msg%n
             </pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>
-                /Users/wangjunjie/Documents/java/code/var/order/error.%d.log
+                /usr/var/log/error.%d.log
                 <!--G:\\var\\alldata\\test\\error.%d.log-->
             </fileNamePattern>
             <!--日志文件保留天数-->
@@ -48,11 +48,19 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.wjj.elasticsearch.shop.dao" level="DEBUG" />
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!--配置logstash的ip和端口，在logstash配置文件中-->
+        <destination>192.168.0.100:5044</destination>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+
+    <!--<logger name="com.wjj.elasticsearch.shop.dao" level="DEBUG" />-->
 
     <root level="info">
         <appender-ref ref="consoleLog"/>
         <appender-ref ref="fileInfoLog"/>
         <appender-ref ref="fileErrorLog"/>
+        <appender-ref ref="logstash"/>
     </root>
 </configuration>

@@ -115,7 +115,7 @@ public class QueryPageService {
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
 
-        //System.out.println(".....total: "+hits.totalHits);
+        //System.out.println(".....total: "+hits.getTotalHits().value);
         Map<String, Object> searchResult = new HashMap<>();
         if (hits.getHits()==null ||hits.getHits().length==0) {
             return null;

@@ -29,7 +29,7 @@ import java.util.Map;
  * @description TODO
  */
 
-@Component
+//@Component
 @Slf4j
 public class CanalScheduling  implements CommandLineRunner {
 

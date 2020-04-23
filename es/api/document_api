@@ -265,3 +265,53 @@ PUT /shop
 
   }
 }
+
+//时间日期查询
+GET blog-demo/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2020-04-14T22:00:00+0800",
+              "lte": "2020-04-14T22:04:00+0800"
+            }
+          }
+        },
+        {
+          "term": {
+            "level.keyword": {
+              "value": "ERROR"
+            }
+          }
+        }
+      ]
+    }
+
+  }
+}
+
+
+//存 数组信息  type mapping type 为 keyword 类型
+POST star/_doc/1
+{
+  "userName":"人名",
+  "sex":0,
+  "age":34,
+  "type":["类型1","类型2","类型3"],
+  "pid":1001
+}
+
+//查询
+GET star/_search
+{
+  "query": {
+    "term": {
+      "type": {
+        "value": "类型1"
+      }
+    }
+  }
+}

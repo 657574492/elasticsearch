@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
  * @description TODO
  */
 
-@Configuration
+//@Configuration
 public class CanalClient implements DisposableBean {
 
     private CanalConnector myCanalConnector;

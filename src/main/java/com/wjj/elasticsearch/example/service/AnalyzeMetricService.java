@@ -61,7 +61,7 @@ public class AnalyzeMetricService {
         SearchHits hits = response.getHits();
 
         //查询的数据总数
-        //System.out.println("...total: "+hits.totalHits);
+        //System.out.println("...total: "+hits.getTotalHits().value);
 
         Map<String, Aggregation> asMap = response.getAggregations().asMap();
         ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");
@@ -110,7 +110,7 @@ public class AnalyzeMetricService {
         SearchHits hits = response.getHits();
 
         //查询的数据总数 todo
-        //System.out.println("...total: "+hits.totalHits);
+        //System.out.println("...total: "+hits.getTotalHits().value);
 
         Map<String, Aggregation> asMap = response.getAggregations().asMap();
         ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");

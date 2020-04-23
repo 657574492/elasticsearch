@@ -73,7 +73,7 @@ public class QueryScoreService {
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
-        //System.out.println(" total:"+hits.totalHits);
+        System.out.println(" total:"+hits.getTotalHits().value);
 
         for (SearchHit hit : hits) {
             System.out.println(hit.getScore());
@@ -126,7 +126,7 @@ public class QueryScoreService {
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
-        //System.out.println(" total:"+hits.totalHits);
+        //System.out.println(" total:"+hits.getTotalHits().value);
 
         for (SearchHit hit : hits) {
             System.out.println(hit.getScore());
@@ -167,7 +167,7 @@ public class QueryScoreService {
 
         SearchHits hits = response.getHits();
 
-        //System.out.println("toatal: "+hits.totalHits);
+        //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             Map<String, Object> map = GsonUtil.GsonToMaps(hitString);

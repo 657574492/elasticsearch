@@ -93,7 +93,7 @@ public class QueryService {
         searchRequest.source(searchSourceBuilder);
         SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         SearchHits hits = response.getHits();
-        //System.out.println("total: "+hits.totalHits);
+        System.out.println("total: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
             StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
