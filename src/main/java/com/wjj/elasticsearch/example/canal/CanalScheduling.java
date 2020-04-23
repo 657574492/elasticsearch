@@ -25,7 +25,7 @@ import java.util.Map;
  * @description TODO
  */
 
-@Component
+//@Component
 public class CanalScheduling implements Runnable {
 
     @Autowired

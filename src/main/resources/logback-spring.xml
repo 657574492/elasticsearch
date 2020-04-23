@@ -48,11 +48,18 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>39.106.193.32:5044</destination>
+        <!-- encoder必须配置,有多种可选 -->
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
     <logger name="com.wjj.elasticsearch.shop.dao" level="DEBUG" />
 
     <root level="info">
         <appender-ref ref="consoleLog"/>
         <appender-ref ref="fileInfoLog"/>
         <appender-ref ref="fileErrorLog"/>
+        <appender-ref ref="stash"/>
     </root>
 </configuration>

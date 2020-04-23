@@ -18,7 +18,7 @@ import java.util.List;
  * @description ik分词 热更新
  */
 
-@Controller
+//@Controller
 @RequestMapping("/ik")
 public class IkWordController {
 
