@@ -3,7 +3,7 @@
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d - %msg%n
+                elasticsearch-api %d [%thread] %-5level %logger{36} %line - %msg%n
             </pattern>
         </layout>
     </appender>
