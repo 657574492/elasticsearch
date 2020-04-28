@@ -4,7 +4,6 @@
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
                 elasticsearch-api %d [%thread] %-5level %logger{36} %line - %msg%n
-
             </pattern>
         </layout>
     </appender>
