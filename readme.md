@@ -1,6 +1,6 @@
 elasticsearch Java Rest High Level Client api 相关列子
 
-es文件夹：所需的mapping 映射
+es文件夹：所需的mapping 映射************
 
 
 com.wjj.elasticsearch.example.service 相关api

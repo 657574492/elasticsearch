@@ -134,20 +134,6 @@ public class GsonUtil {
     }
 
     public static void main(String[] args) {
-       /* Person person = new Person();
-        person.setName("王俊杰");
-        person.setMoney(200);
-        person.setAge(26);
-        person.setId(1);
-        List<String> list = person.getList();
-        list.add("高圆圆");
-        list.add("佟丽娅");
-        list.add("俞飞鸿");
-        String string = GsonString(person);
-        System.out.println(string);*/
 
-       /* Person person = GsonToBean("{\"id\":1,\"name\":\"王俊杰\",\"age\":26," +
-                "\"money\":200,\"list\":[\"高圆圆\",\"佟丽娅\",\"俞飞鸿\"]}", Person.class);
-        System.out.println(person);*/
     }
 }
