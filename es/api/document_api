@@ -315,3 +315,11 @@ GET star/_search
     }
   }
 }
+
+GET _analyze
+{
+  "analyzer": "ik_max_word",
+  "text": "华为MATE30pro"
+}
+
+GET shop_goods/_doc/X0000001
