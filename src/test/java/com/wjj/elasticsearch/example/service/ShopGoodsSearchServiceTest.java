@@ -21,4 +21,9 @@ public class ShopGoodsSearchServiceTest {
     public void query1() throws IOException {
         shopGoodsSearchService.query1("小米");
     }
+
+    @Test
+    public void group1() throws IOException {
+        shopGoodsSearchService.group1();
+    }
 }

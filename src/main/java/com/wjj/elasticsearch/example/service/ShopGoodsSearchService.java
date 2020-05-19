@@ -1,6 +1,7 @@
 package com.wjj.elasticsearch.example.service;
 
 import com.wjj.elasticsearch.example.util.GsonUtil;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -11,11 +12,18 @@ import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author wangjunjie
@@ -59,5 +67,44 @@ public class ShopGoodsSearchService {
             System.out.println(GsonUtil.GsonToMaps(result));
         }
 
+    }
+
+    public void group1() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.size(0);
+
+        sourceBuilder.aggregation(AggregationBuilders.terms("terms_categoryName").field("categoryName").size(10));
+        sourceBuilder.aggregation(AggregationBuilders.terms("terms_branId").field("brandName").size(10));
+
+        NestedAggregationBuilder nestedAggregation= AggregationBuilders.nested("terms_sku_data", "sku.skuData")
+                .subAggregation(AggregationBuilders.terms("terms_nested_attribute").field("sku.skuData.attribute").size(3));
+        sourceBuilder.aggregation(nestedAggregation);
+
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        Aggregations aggregations = searchResponse.getAggregations();
+        Terms categoryNameTerms = aggregations.get("terms_categoryName");
+        List<? extends Terms.Bucket> buckets = categoryNameTerms.getBuckets();
+        for (Terms.Bucket bucket : buckets) {
+            System.out.println(bucket.getKey());
+            System.out.println(bucket.getDocCount());
+        }
+        System.out.println("----------------------------");
+        Terms branIdTerms = aggregations.get("terms_branId");
+        List<? extends Terms.Bucket> branIdBuckets = categoryNameTerms.getBuckets();
+        for (Terms.Bucket bucket : branIdBuckets) {
+            System.out.println(bucket.getKey());
+            System.out.println(bucket.getDocCount());
+        }
+        System.out.println("----------------------------");
+        ParsedNested parsedNested = aggregations.get("terms_sku_data");
+        Terms skuTerms =parsedNested.getAggregations().get("terms_nested_attribute");
+        List<? extends Terms.Bucket> skuBuckets = skuTerms.getBuckets();
+        for (Terms.Bucket bucket : skuBuckets) {
+            System.out.println(bucket.getKey());
+            System.out.println(bucket.getDocCount());
+        }
     }
 }
