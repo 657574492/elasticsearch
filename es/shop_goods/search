@@ -94,3 +94,27 @@ GET shop_goods/_search
     }
   }
 }
+
+GET /movies2/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "actors.first_name": {
+              "value": "段"
+            }
+          }
+        },
+        {
+          "term": {
+            "actors.last_name": {
+              "value": "国强"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
