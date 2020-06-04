@@ -37,19 +37,21 @@ public class HighLightService {
      *
      */
     public void qurey1() throws IOException {
-        SearchRequest request = new SearchRequest("shop");
+        SearchRequest request = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.should(QueryBuilders.matchQuery("name","酒店"));
-        boolQueryBuilder.should(QueryBuilders.matchQuery("category_name","酒店"));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("title","小米"));
+        //boolQueryBuilder.should(QueryBuilders.matchQuery("category_name","酒店"));
 
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        HighlightBuilder.Field nameField = new HighlightBuilder.Field("name");
-        HighlightBuilder.Field categoryNameField = new HighlightBuilder.Field("category_name");
+        highlightBuilder.preTags("<tag1>");
+        highlightBuilder.postTags("</tag1>");
+        HighlightBuilder.Field nameField = new HighlightBuilder.Field("title");
+        //HighlightBuilder.Field categoryNameField = new HighlightBuilder.Field("category_name");
 
         highlightBuilder.field(nameField);
-        highlightBuilder.field(categoryNameField);
+        //highlightBuilder.field(categoryNameField);
 
         sourceBuilder.query(boolQueryBuilder);
         sourceBuilder.highlighter(highlightBuilder);
@@ -66,6 +68,7 @@ public class HighLightService {
             System.out.println(map.toString());
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             for (Map.Entry<String, HighlightField> fieldEntry : highlightFields.entrySet()) {
+                System.out.println("aaaaaa");
                 System.out.println("field: "+ fieldEntry.getKey()+" value:"+fieldEntry.getValue());
             }
         }

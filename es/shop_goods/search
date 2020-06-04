@@ -14,6 +14,11 @@ GET shop_goods/_search
           "match": {
             "subTitle": "5g"
           }
+        },
+        {
+          "term":{
+            "brandName":"小米"
+          }
         }
       ],
       "filter": [
@@ -118,3 +123,60 @@ GET /movies2/_search
     }
   }
 }
+
+GET movies/_search
+{
+  "query": {
+    "nested": {
+      "path": "actors",
+      "query": {
+        "bool": {
+          "must": [
+            {
+          "term": {
+            "actors.first_name": {
+              "value": "段"
+            }
+          }
+        },
+        {
+          "term": {
+            "actors.last_name": {
+              "value": "奕宏"
+            }
+          }
+        }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET _analyze
+{
+  "analyzer": "ik_max_word",
+  "text": "小米10pro 5g 骁龙865 1亿像素"
+}
+
+随机查询
+GET shop_goods/_search
+{
+  "size": 10,
+  "query": {
+      "match": {
+        "subTitle": "5g"
+      }
+    }
+  , "sort":{
+      "_script":{
+         "script": "Math.random()",
+	        "type": "number",
+
+	        "order": "asc"
+      }
+
+  }
+}
+
+

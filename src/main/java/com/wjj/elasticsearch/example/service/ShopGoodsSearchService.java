@@ -66,6 +66,8 @@ public class ShopGoodsSearchService {
             String result = hit.getSourceAsString();
             System.out.println(GsonUtil.GsonToMaps(result));
         }
+        long value = hits.getTotalHits().value;
+        System.out.println(value);
 
     }
 
