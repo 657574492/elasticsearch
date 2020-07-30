@@ -2,6 +2,7 @@ package com.wjj.elasticsearch.example.service;
 
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -29,7 +30,7 @@ public class AddIndexService {
     public void addIndex() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
         IndexRequest indexRequest = new IndexRequest("star", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
@@ -37,7 +38,7 @@ public class AddIndexService {
     public void addIndex2() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
         IndexRequest indexRequest = new IndexRequest("star2", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
@@ -45,8 +46,16 @@ public class AddIndexService {
     public void addIndex3() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
         IndexRequest indexRequest = new IndexRequest("star_completion", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
+
+  /*  public void addBatch() {
+        BulkRequest bulkRequest = new BulkRequest();
+        for (int i = 0; i < 100; i++) {
+            bulkRequest.add();
+        }
+        rhlClient.bulkAsync()
+    }*/
 }

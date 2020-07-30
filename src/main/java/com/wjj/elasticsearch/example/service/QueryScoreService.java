@@ -78,7 +78,7 @@ public class QueryScoreService {
         for (SearchHit hit : hits) {
             System.out.println(hit.getScore());
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -131,7 +131,7 @@ public class QueryScoreService {
         for (SearchHit hit : hits) {
             System.out.println(hit.getScore());
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -170,7 +170,7 @@ public class QueryScoreService {
         //System.out.println("toatal: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
+            Map<String, Object> map = GsonUtil.parseMap(hitString);
             System.out.println(map);
         }
 

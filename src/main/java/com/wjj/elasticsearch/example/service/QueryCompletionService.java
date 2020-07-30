@@ -70,7 +70,7 @@ public class QueryCompletionService {
         System.out.println(options.size());
         for (CompletionSuggestion.Entry.Option option : options) {
             SearchHit hit = option.getHit();
-            StarDocument starDocument = GsonUtil.GsonToBean(hit.getSourceAsString(), StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hit.getSourceAsString(), StarDocument.class);
             System.out.println(starDocument.toString());
         }
 

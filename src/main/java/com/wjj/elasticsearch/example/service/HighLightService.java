@@ -1,6 +1,8 @@
 package com.wjj.elasticsearch.example.service;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.wjj.elasticsearch.example.domain.index.GoodsDocument;
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
 import org.elasticsearch.action.search.SearchRequest;
@@ -31,46 +33,34 @@ public class HighLightService {
     private RestHighLevelClient rhlclient;
 
     /**
-     *
-     *
-     * 高亮查询
-     *
+     * 高亮查询 (编号1)
      */
     public void qurey1() throws IOException {
         SearchRequest request = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.should(QueryBuilders.matchQuery("title","小米"));
-        //boolQueryBuilder.should(QueryBuilders.matchQuery("category_name","酒店"));
+        sourceBuilder.query(QueryBuilders.matchQuery("subTitle","华为麒麟990"));
 
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.preTags("<tag1>");
-        highlightBuilder.postTags("</tag1>");
-        HighlightBuilder.Field nameField = new HighlightBuilder.Field("title");
-        //HighlightBuilder.Field categoryNameField = new HighlightBuilder.Field("category_name");
+        highlightBuilder.preTags("<b>");
+        highlightBuilder.postTags("</b>");
+        HighlightBuilder.Field subTitle = new HighlightBuilder.Field("subTitle");
 
-        highlightBuilder.field(nameField);
-        //highlightBuilder.field(categoryNameField);
-
-        sourceBuilder.query(boolQueryBuilder);
+        highlightBuilder.field(subTitle);
         sourceBuilder.highlighter(highlightBuilder);
         request.source(sourceBuilder);
         SearchResponse response = rhlclient.search(request, RequestOptions.DEFAULT);
 
         SearchHits hits = response.getHits();
-        //System.out.println(" total:"+hits.getTotalHits().value);
-
         for (SearchHit hit : hits) {
-            System.out.println("----------------");
             String hitString = hit.getSourceAsString();
-            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
-            System.out.println(map.toString());
+            GoodsDocument goodsDocument = GsonUtil.parse(hitString, GoodsDocument.class);
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
-            for (Map.Entry<String, HighlightField> fieldEntry : highlightFields.entrySet()) {
-                System.out.println("aaaaaa");
-                System.out.println("field: "+ fieldEntry.getKey()+" value:"+fieldEntry.getValue());
-            }
+            HighlightField highlightField = highlightFields.get("subTitle");
+            String s = highlightField.fragments()[0].toString();
+            goodsDocument.setSubTitle(s);
+            System.out.println(GsonUtil.toJSONStringg(goodsDocument));
         }
+
+
     }
 }

@@ -188,7 +188,7 @@ public class AnalyzeBucketService {
             SearchHits hits = topHits.getHits();
             for (SearchHit hit : hits) {
                 String hitString = hit.getSourceAsString();
-                StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+                StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
                 System.out.println(starDocument.toString());
             }
         }

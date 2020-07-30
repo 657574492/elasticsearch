@@ -184,28 +184,19 @@ GET /product/_search
   }
 }
 
-// 高亮查询
-GET shop/_search
+// 高亮查询  (编号1)
+GET shop_goods/_search
 {
   "query": {
-    "bool": {
-      "should": [
-        {"match": {
-          "name": "酒店"
-        }},{
-          "match": {
-            "category_name": "酒店"
-          }
-        }
-      ]
+    "match": {
+      "subTitle": "华为"
     }
   },
   "highlight": {
     "fields": {
-      "name": {},
-      "category_name":{}
+      "subTitle": {}
     },
-    "pre_tags": "<b class='key' style='color:red'>",
+    "pre_tags": "<b>",
     "post_tags": "</b>"
   }
 }

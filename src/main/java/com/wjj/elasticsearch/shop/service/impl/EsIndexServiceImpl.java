@@ -28,7 +28,7 @@ public class EsIndexServiceImpl implements EsIndexService {
         List<Map<String, Object>> list = shopModelMapper.buildESQuery(null, null, null);
         for (Map<String, Object> map : list) {
             IndexRequest indexRequest = new IndexRequest("shop", "_doc", String.valueOf((int) map.get("id")));
-            String shopIndex = GsonUtil.GsonString(map);
+            String shopIndex = GsonUtil.toJSONStringg(map);
             indexRequest.source(shopIndex, XContentType.JSON);
             rhlClient.index(indexRequest, RequestOptions.DEFAULT);
         }

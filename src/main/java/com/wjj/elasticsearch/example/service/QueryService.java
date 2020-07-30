@@ -63,7 +63,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -98,7 +98,7 @@ public class QueryService {
         System.out.println("total: "+hits.getTotalHits().value);
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -187,7 +187,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -231,7 +231,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -265,7 +265,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -304,7 +304,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
         }
     }
@@ -352,7 +352,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
 
         }
@@ -385,7 +385,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
 
         }
@@ -418,7 +418,7 @@ public class QueryService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
+            StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
             System.out.println(starDocument.toString());
 
         }
