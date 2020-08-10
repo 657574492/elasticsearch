@@ -1,5 +1,6 @@
 package com.wjj.elasticsearch.example.service;
 
+import com.wjj.elasticsearch.example.domain.index.GoodsDocument;
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
 import org.apache.http.HttpHost;
@@ -45,151 +46,92 @@ public class AnalyzeBucketService {
 
     /**
      *
-     * 聚合查询bucket 一个字段不同数据
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_age": {
-     *       "terms": {
-     *         "field": "type"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询bucket 一个字段不同数据 （编号2）
      * @throws IOException
      */
     public void analyzeQuery1() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("bucket_type").field("type");
+        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_brandName").field("brandName").size(10);
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = response.getAggregations();
 
-        Terms terms = aggregations.get("bucket_type");
+        Terms terms = aggregations.get("terms_brandName");
 
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
-            System.out.println(bucket.getKey());
+            System.out.println("key:"+bucket.getKey());
             //类型数量
-            System.out.println(bucket.getDocCount());
+            System.out.println("doc_count:"+bucket.getDocCount());
         }
     }
 
     /**
      *
-     * 聚合查询bucket 一个字段不同数据 以字段数量进行排序（默认是以字段数量倒序排列）
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_age": {
-     *       "terms": {
-     *         "field": "type",
-     *         "order": {
-     *           "_count": "desc"
-     *         }
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询bucket 一个字段不同数据 以字段数量进行排序（默认是以字段数量倒序排列） （编号3）
      * @throws IOException
      */
     public void analyzeQuery7() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
         AggregationBuilder aggregationBuilder = AggregationBuilders
-                .terms("bucket_type")
-                .field("type")
-                .order(BucketOrder.key(false));
+                .terms("terms_brandName")
+                .field("brandName")
+                .order(BucketOrder.count(true));
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = response.getAggregations();
 
-        Terms terms = aggregations.get("bucket_type");
+        Terms terms = aggregations.get("terms_brandName");
 
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
-            System.out.println(bucket.getKey());
+            System.out.println("key:"+bucket.getKey());
             //类型数量
-            System.out.println(bucket.getDocCount());
+            System.out.println("doc_count:"+bucket.getDocCount());
         }
     }
 
     /**
-     *
-     * 聚合查询bucket 嵌套 top_hits 展示分组后的数据详情
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_age": {
-     *       "terms": {
-     *         "field": "type"
-     *       },
-     *       "aggs": {
-     *         "old_agg": {
-     *           "top_hits": {
-     *             "size": 2,
-     *             "sort": [
-     *               {
-     *                 "age": {
-     *                   "order":"desc"
-     *                 }
-     *               }
-     *             ]
-     *           }
-     *         }
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询bucket 嵌套 top_hits 展示分组后的数据详情并排序 (分组排序) （编号4）
      * @throws IOException
      */
     public void analyzeQuery2() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("bucket_type").field("type");
+        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_categoryId").field("categoryId").size(10);
         aggregationBuilder.subAggregation(AggregationBuilders
-                .topHits("old_age").size(2).sort("age",SortOrder.DESC));
+                .topHits("max_price").size(1).sort("price",SortOrder.DESC));
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-        //todo response.getHits().totalHits
-        //System.out.println("total: "+response.getHits().totalHits);
         Aggregations aggregations = response.getAggregations();
-
-        Terms terms = aggregations.get("bucket_type");
+        Terms terms = aggregations.get("terms_categoryId");
 
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
-            System.out.println(bucket.getKey());
-            System.out.println(bucket.getDocCount());
+            System.out.println("key:"+bucket.getKey());
+            //类型数量
+            System.out.println("doc_count:"+bucket.getDocCount());
 
-            ParsedTopHits topHits = bucket.getAggregations().get("old_age");
+            ParsedTopHits topHits = bucket.getAggregations().get("max_price");
             SearchHits hits = topHits.getHits();
             for (SearchHit hit : hits) {
                 String hitString = hit.getSourceAsString();
-                StarDocument starDocument = GsonUtil.parse(hitString, StarDocument.class);
-                System.out.println(starDocument.toString());
+                GoodsDocument goodsDocument = GsonUtil.parse(hitString, GoodsDocument.class);
+                System.out.println(GsonUtil.toJSONStringg(goodsDocument));
             }
         }
 

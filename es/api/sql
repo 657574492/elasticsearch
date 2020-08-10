@@ -1,0 +1,58 @@
+编号2
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_age": {
+      "terms": {
+        "field": "brandName",
+        "size": 10
+      }
+    }
+  }
+}
+
+编号3
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_brandName": {
+      "terms": {
+        "field": "brandName",
+        "size": 10,
+        "order": {
+          "_count": "asc"
+        }
+      }
+    }
+  }
+}
+
+编号4
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_categoryId": {
+      "terms": {
+        "field": "categoryId",
+        "size": 10
+      },
+      "aggs": {
+        "max_price": {
+          "top_hits": {
+            "size": 1,
+            "sort": [
+              {
+                "price": {
+                  "order": "desc"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

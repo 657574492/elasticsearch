@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @Author: wangjunjie 2019/8/23 17:21
@@ -29,7 +30,8 @@ public class AddIndexService {
 
     public void addIndex() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
-        IndexRequest indexRequest = new IndexRequest("star", "_doc", starDocument.getUid());
+        IndexRequest indexRequest = new IndexRequest("star");
+        indexRequest.id("11");
         String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
