@@ -138,68 +138,30 @@ public class AnalyzeBucketService {
     }
 
     /**
-     * 聚合查询bucket 嵌套
-     *
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_age": {
-     *       "terms": {
-     *         "field": "type"
-     *       },
-     *       "aggs": {
-     *         "stats_agg": {
-     *          "stats": {
-     *            "field": "age"
-     *          }
-     *         }
-     *       }
-     *     }
-     *   },
-     *   "query": {
-     *     "term": {
-     *       "sex": {
-     *         "value": 0
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询bucket 嵌套 （编号5）
      * @throws IOException
      */
     public void analyzeQuery3() throws IOException {
 
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("bucket_type").field("type");
-        aggregationBuilder.subAggregation(AggregationBuilders.stats("stat_age").field("age"));
+        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_brandName").field("brandName").size(10);
         sourceBuilder.aggregation(aggregationBuilder);
         //可以先根据条件查询，再统计
-        sourceBuilder.query(QueryBuilders.termQuery("sex",0));
+        sourceBuilder.query(QueryBuilders.rangeQuery("price").lte(100000));
 
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = searchResponse.getAggregations();
-        Terms terms = aggregations.get("bucket_type");
+        Terms terms = aggregations.get("terms_brandName");
 
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
-            System.out.println(bucket.getKey());
-            System.out.println(bucket.getDocCount());
-
-            Stats statAge = bucket.getAggregations().get("stat_age");
-            System.out.println(bucket.getKey());
-            //获取分组名称
-            System.out.println("平均值："+statAge.getAvg());
-            System.out.println("总数："+statAge.getSum());
-            System.out.println("最大值："+statAge.getMaxAsString());
-            System.out.println("最小值："+statAge.getMin());
-            System.out.println("数量："+statAge.getCount());
-            System.out.println("---------------");
+            System.out.println("key:"+bucket.getKey());
+            //类型数量
+            System.out.println("doc_count:"+bucket.getDocCount());
 
         }
     }

@@ -56,3 +56,24 @@ GET shop_goods/_search
     }
   }
 }
+
+编号5
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "brandName": {
+      "terms": {
+        "field": "brandName",
+        "size": 10
+      }
+    }
+  },
+  "query": {
+    "range": {
+      "price": {
+        "lte": 100000
+      }
+    }
+  }
+}
