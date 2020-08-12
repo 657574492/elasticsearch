@@ -16,6 +16,7 @@ import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.ParsedAvg;
@@ -167,107 +168,57 @@ public class AnalyzeBucketService {
     }
 
     /**
-     *
-     * 聚合查询 查询字段区间值 from 包括 to 不包括
-     *
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "rang_age": {
-     *       "range": {
-     *         "field": "age",
-     *         "ranges": [
-     *           {
-     *             "key": "rang1",
-     *             "to": 20
-     *           },{
-     *             "key": "rang2",
-     *             "from":20 ,
-     *             "to": 30
-     *           },{
-     *             "from": 30,
-     *             "to": 40
-     *           },
-     *           {
-     *             "key": "rang3",
-     *             "from": 50
-     *
-     *           }
-     *         ]
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询 查询字段区间值 from 包括 to 不包括 （编号6）
      * @throws IOException
      */
     public void analyzeQuery4() throws IOException {
 
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        RangeAggregationBuilder aggregationBuilder = AggregationBuilders.range("range_age")
-                .field("age")
-                .addUnboundedTo("range1", 20)
-                .addRange("range2", 20, 30)
-                .addRange("range3", 30, 40)
-                .addUnboundedFrom("ange4", 40);
+        RangeAggregationBuilder aggregationBuilder = AggregationBuilders.range("range_price")
+                .field("price")
+                .addUnboundedTo("range1", 200000)
+                .addRange("range2", 200000, 400000)
+                .addRange("range3", 400000, 600000)
+                .addUnboundedFrom("ange4", 600000);
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-
-        Map<String, Aggregation> aggMap = searchResponse.getAggregations().asMap();
-        ParsedRange rangeAge =(ParsedRange) aggMap.get("range_age");
-        for (Range.Bucket bucket : rangeAge.getBuckets()) {
+        Aggregations aggregations = searchResponse.getAggregations();
+        ParsedRange terms = aggregations.get("range_price");
+        List<? extends Range.Bucket> buckets = terms.getBuckets();
+        for (Range.Bucket bucket : buckets) {
             System.out.println("key:"+bucket.getKey());
-            System.out.println("count:"+bucket.getDocCount());
+            //类型数量
+            System.out.println("doc_count:"+bucket.getDocCount());
+            System.out.println("form:"+bucket.getFrom());
+            System.out.println("to:"+bucket.getTo());
+            System.out.println("----------------------");
         }
+
     }
 
     /**
      *
-     * 聚合查询 pipeline 聚合分析
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_type" : {
-     *       "terms": {
-     *         "field": "type"
-     *       },
-     *       "aggs":{
-     *         "avg_age":{
-     *           "avg": {
-     *             "field": "age"
-     *           }
-     *         }
-     *       }
-     *     },
-     *     "min_type_age" : {
-     *       "min_bucket" :{
-     *         "buckets_path": "terms_type>avg_age"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询 pipeline 聚合分析 (分组后：求分组后某一属性最大或最小的组) （编号7）
+     *
      * @throws IOException
      */
     public void analyzeQuery5() throws IOException {
 
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_type").field("type");
-        aggregationBuilder.subAggregation(AggregationBuilders.avg("avg_age").field("age"));
+        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_categoryId").field("categoryId");
+        aggregationBuilder.subAggregation(AggregationBuilders.avg("avg_price").field("price"));
         //pipeline 聚合分析 查询平均年龄最小的 type类型
-        PipelineAggregationBuilder pipelineAggregationBuilder = PipelineAggregatorBuilders.minBucket("min_type_age", "terms_type>avg_age");
+        PipelineAggregationBuilder pipelineAggregationBuilder = PipelineAggregatorBuilders.minBucket("min_category_price", "terms_categoryId>avg_price");
         sourceBuilder.aggregation(aggregationBuilder);
         sourceBuilder.aggregation(pipelineAggregationBuilder);
 
@@ -275,16 +226,17 @@ public class AnalyzeBucketService {
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
 
         Aggregations aggregations = searchResponse.getAggregations();
-        Terms terms = aggregations.get("terms_type");
+        Terms terms = aggregations.get("terms_categoryId");
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
             System.out.println(bucket.getKey());
             System.out.println("count:"+bucket.getDocCount());
-            ParsedAvg parsedAvg = bucket.getAggregations().get("avg_age");
+            ParsedAvg parsedAvg = bucket.getAggregations().get("avg_price");
             System.out.println(parsedAvg.getValue());
+            System.out.println("----------------");
         }
 
-        ParsedBucketMetricValue bucketMetricValue = aggregations.get("min_type_age");
+        ParsedBucketMetricValue bucketMetricValue = aggregations.get("min_category_price");
         String key = bucketMetricValue.keys()[0];
         System.out.println(key);
         System.out.println(bucketMetricValue.value());
@@ -292,58 +244,34 @@ public class AnalyzeBucketService {
 
 
     /**
-     *
-     * 聚合查询结果排序
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "terms_type" : {
-     *       "terms": {
-     *         "field": "type",
-     *         "order": [{
-     *           "sum_age": "desc"
-     *         }],
-     *         "size": 3
-     *       },
-     *       "aggs": {
-     *         "sum_age": {
-     *           "sum": {
-     *             "field": "age"
-     *           }
-     *         }
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询结果排序 （编号8）
      * @throws IOException
      */
     public void analyzeQuery6() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
+
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_type").field("type");
+        AggregationBuilder aggregationBuilder = AggregationBuilders.terms("terms_categoryId").field("categoryId");
         AggregationBuilder orderAggregationBuilder = ((TermsAggregationBuilder) aggregationBuilder)
-                .order(BucketOrder.aggregation("sum_age", false)).size(2);
-        orderAggregationBuilder.subAggregation(AggregationBuilders.sum("sum_age").field("age"));
+                .order(BucketOrder.aggregation("avg_price", false)).size(10);
+        orderAggregationBuilder.subAggregation(AggregationBuilders.avg("avg_price").field("price"));
         sourceBuilder.aggregation(orderAggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = searchResponse.getAggregations();
-        Terms terms = aggregations.get("terms_type");
+        Terms terms = aggregations.get("terms_categoryId");
 
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
             System.out.println(bucket.getKey());
-            System.out.println(bucket.getDocCount());
-            ParsedSum sumAge = bucket.getAggregations().get("sum_age");
-            System.out.println(sumAge.getValue());
-            System.out.println("---------------");
-
+            System.out.println("count:"+bucket.getDocCount());
+            ParsedAvg parsedAvg = bucket.getAggregations().get("avg_price");
+            System.out.println(parsedAvg.getValue());
+            System.out.println("----------------");
         }
 
 
