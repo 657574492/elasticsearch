@@ -205,3 +205,90 @@ GET shop_goods/_search
     }
   }
 }
+
+编号12
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "cardinality_price": {
+      "cardinality": {
+        "field": "price"
+      }
+    }
+  }
+}
+
+编号13
+GET shop_goods/_search
+{
+  "query": {
+    "nested": {
+      "path": "sku.skuData",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "sku.skuData.attribute": {
+                  "value": "内存"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+编号14
+GET shop_goods/_search
+{
+  "query": {
+    "nested": {
+      "path": "sku.skuData",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "sku.skuData.attribute": {
+                  "value": "内存"
+                }
+              }
+            },
+            {
+              "term": {
+                "sku.skuData.value": {
+                  "value": "16"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+编号15
+GET shop_goods/_search
+{
+ "size": 0,
+ "aggs": {
+   "attribute": {
+     "nested": {
+       "path": "sku.skuData"
+     },
+     "aggs": {
+       "attribute_type": {
+         "terms": {
+           "field": "sku.skuData.attribute",
+           "size": 20
+         }
+       }
+     }
+   }
+ }
+}

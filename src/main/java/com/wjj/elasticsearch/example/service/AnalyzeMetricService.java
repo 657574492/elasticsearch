@@ -114,33 +114,20 @@ public class AnalyzeMetricService {
 
     /**
      *
-     * 聚合查询metric 一个字段不同数据的数量
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "cardinality_age": {
-     *       "cardinality": {
-     *         "field": "age"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询metric 一个字段不同数据的数量 （编号12）
      * @throws IOException
      */
     public void analyzeQuery4() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        CardinalityAggregationBuilder aggregationBuilder = AggregationBuilders.cardinality("cardinality_age").field("age");
+        CardinalityAggregationBuilder aggregationBuilder = AggregationBuilders.cardinality("cardinality_price").field("price");
         sourceBuilder.aggregation(aggregationBuilder);
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-        Map<String, Aggregation> asMap = response.getAggregations().asMap();
-        ParsedCardinality cardinalityAge = (ParsedCardinality) asMap.get("cardinality_age");
+        Aggregation aggregation = response.getAggregations().get("cardinality_price");
+        ParsedCardinality cardinalityAge = (ParsedCardinality) aggregation;
         System.out.println(cardinalityAge.getValue());
     }
 }
