@@ -1,0 +1,294 @@
+编号2
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_age": {
+      "terms": {
+        "field": "brandName",
+        "size": 10
+      }
+    }
+  }
+}
+
+编号3
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_brandName": {
+      "terms": {
+        "field": "brandName",
+        "size": 10,
+        "order": {
+          "_count": "asc"
+        }
+      }
+    }
+  }
+}
+
+编号4
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_categoryId": {
+      "terms": {
+        "field": "categoryId",
+        "size": 10
+      },
+      "aggs": {
+        "max_price": {
+          "top_hits": {
+            "size": 1,
+            "sort": [
+              {
+                "price": {
+                  "order": "desc"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+
+编号5
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "brandName": {
+      "terms": {
+        "field": "brandName",
+        "size": 10
+      }
+    }
+  },
+  "query": {
+    "range": {
+      "price": {
+        "lte": 100000
+      }
+    }
+  }
+}
+
+编号6
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "range_price": {
+      "range": {
+        "field": "price",
+        "ranges": [
+          {
+            "key": "key1",
+            "from": 0,
+            "to": 200000
+          },
+          {
+            "key": "key2",
+            "from": 200000,
+             "to": 400000
+          },
+          {
+            "key": "key3",
+            "from": 400000,
+            "to": 600000
+          },
+          {
+            "key": "key4",
+            "from": 600000
+          }
+        ]
+      }
+    }
+  }
+}
+
+编号7
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_categoryId": {
+      "terms": {
+        "field": "categoryId",
+        "size": 10
+      },
+      "aggs": {
+        "avg_price": {
+          "avg": {
+            "field": "price"
+          }
+        }
+      }
+    },
+    "min_category_price" :{
+      "min_bucket": {
+        "buckets_path": "terms_categoryId>avg_price"
+      }
+    }
+  }
+}
+
+编号8
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_categoryId": {
+      "terms": {
+        "field": "categoryId",
+        "size": 10,
+        "order": {
+          "avg_price": "desc"
+        }
+      },
+      "aggs": {
+        "avg_price": {
+          "avg": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+
+编号9
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "min_price": {
+      "max": {
+        "field": "price"
+      }
+    }
+  }
+}
+
+编号10
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "min_price": {
+      "min": {
+        "field": "price"
+      }
+    },
+    "max_date":{
+      "max": {
+        "field": "price"
+      }
+    }
+  }
+}
+
+编号11
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "stats_price": {
+      "stats": {
+        "field": "price"
+      }
+    }
+  }
+}
+
+编号12
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "cardinality_price": {
+      "cardinality": {
+        "field": "price"
+      }
+    }
+  }
+}
+
+编号13
+GET shop_goods/_search
+{
+  "query": {
+    "nested": {
+      "path": "sku.skuData",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "sku.skuData.attribute": {
+                  "value": "内存"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+编号14
+GET shop_goods/_search
+{
+  "query": {
+    "nested": {
+      "path": "sku.skuData",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "sku.skuData.attribute": {
+                  "value": "内存"
+                }
+              }
+            },
+            {
+              "term": {
+                "sku.skuData.value": {
+                  "value": "16"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+编号15
+GET shop_goods/_search
+{
+ "size": 0,
+ "aggs": {
+   "attribute": {
+     "nested": {
+       "path": "sku.skuData"
+     },
+     "aggs": {
+       "attribute_type": {
+         "terms": {
+           "field": "sku.skuData.attribute",
+           "size": 20
+         }
+       }
+     }
+   }
+ }
+}

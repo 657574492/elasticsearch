@@ -1,0 +1,134 @@
+PUT shop_goods
+{
+   "settings": {
+    "number_of_shards": 3
+    , "number_of_replicas": 1
+  },
+   "mappings" : {
+       "dynamic":false,
+       "properties" : {
+         "productId":{
+           "type":"long"
+         },
+         "productSn":{
+           "type":"keyword"
+         },
+         "brandId":{
+           "type":"long"
+         },
+         "brandName":{
+           "type":"keyword"
+         },
+         "categoryId":{
+           "type":"keyword"
+         },
+         "categoryName":{
+           "type":"keyword"
+         },
+         "title":{
+          "type":"text",
+          "analyzer": "ik_max_word",
+          "search_analyzer":"ik_smart"
+         },
+         "subTitle":{
+          "type":"text",
+          "analyzer": "ik_max_word",
+          "search_analyzer":"ik_smart"
+         },
+         "price":{
+           "type":"integer"
+         },
+         "saleCount":{
+           "type":"integer"
+         },
+         "commentCount":{
+           "type":"integer"
+         },
+         "publishDate":{
+           "type":"date"
+         },
+         "hot":{
+           "type":"integer"
+         },
+         "sku":{
+           "type":"nested",
+           "properties":{
+             "price": {
+               "type":"integer"
+             },
+             "skuSn":{
+               "type":"keyword"
+             },
+             "skuId":{
+               "type":"long"
+              },
+              "skuData":{
+                "type":"nested",
+                 "properties":{
+                    "attribute":{
+                      "type":"keyword"
+                    },
+                    "value":{
+                      "type":"keyword"
+                    }
+                 }
+              }
+           }
+         }
+       }
+
+  }
+}
+
+PUT shop_goods/_doc/1
+{
+  "productId":1,
+  "productSn":"X0001",
+  "brandId":1,
+  "brandName":"小米",
+  "categoryId":1,
+  "categoryName":"智能手机" ,
+  "title":"小米10pro",
+  "subTitle":"小米10pro 5g 骁龙865 1亿像素",
+  "sku":[
+      {
+        "price" : 399900,
+        "skuId" : 15,
+        "skuSn" : "X0001001",
+        "skuData" : [
+            {
+              "attribute" : "内存",
+              "value" : "8"
+            },
+            {
+              "attribute" : "处理器",
+              "value" : "骁龙865"
+            },
+            {
+              "attribute" : "存储",
+              "value" : "125g"
+            }
+          ]
+      },
+      {
+        "price" : 499900,
+        "skuId" : 15,
+        "skuSn" : "X0001002",
+        "skuData" : [
+            {
+              "attribute" : "内存",
+              "value" : "12"
+            },
+            {
+              "attribute" : "处理器",
+              "value" : "骁龙865"
+            },
+            {
+              "attribute" : "存储",
+              "value" : "256g"
+            }
+          ]
+      }
+  ]
+}
+

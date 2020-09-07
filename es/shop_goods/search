@@ -1,0 +1,182 @@
+GET shop_goods/_search
+{
+
+  "query": {
+
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "title": "5g"
+          }
+        },
+        {
+          "match": {
+            "subTitle": "5g"
+          }
+        },
+        {
+          "term":{
+            "brandName":"小米"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "nested":{
+            "path":"sku",
+             "query":{
+                "range":{
+                  "sku.price":{
+                    "gte": 300000,
+                    "lte": 800000
+                  }
+                }
+             }
+          }
+
+        },
+        {
+          "nested": {
+            "path": "sku.skuData",
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "sku.skuData.attribute": {
+                        "value": "处理器"
+                      }
+                    }
+                  },
+                  {
+                    "term": {
+                      "sku.skuData.value": {
+                        "value": "骁龙865"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+
+      ],
+      "minimum_should_match": 1
+    }
+  }
+}
+
+GET shop_goods/_search
+{
+  "size": 0,
+  "aggs": {
+    "terms_categoryName": {
+      "terms": {
+        "field": "categoryName",
+        "size": 10
+      }
+    },
+    "terms_branId": {
+      "terms": {
+        "field": "brandName",
+        "size": 10
+      }
+    },
+    "terms_sku_data":{
+      "nested":{
+        "path": "sku.skuData"
+      },
+      "aggs":{
+        "terms_nested_attribute":{
+          "terms": {
+            "field": "sku.skuData.attribute",
+            "size": 3
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /movies2/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "actors.first_name": {
+              "value": "段"
+            }
+          }
+        },
+        {
+          "term": {
+            "actors.last_name": {
+              "value": "国强"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET movies/_search
+{
+  "query": {
+    "nested": {
+      "path": "actors",
+      "query": {
+        "bool": {
+          "must": [
+            {
+          "term": {
+            "actors.first_name": {
+              "value": "段"
+            }
+          }
+        },
+        {
+          "term": {
+            "actors.last_name": {
+              "value": "奕宏"
+            }
+          }
+        }
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET _analyze
+{
+  "analyzer": "ik_max_word",
+  "text": "小米10pro 5g 骁龙865 1亿像素"
+}
+
+随机查询
+GET shop_goods/_search
+{
+  "size": 10,
+  "query": {
+      "match": {
+        "subTitle": "5g"
+      }
+    }
+  , "sort":{
+      "_script":{
+         "script": "Math.random()",
+	        "type": "number",
+
+	        "order": "asc"
+      }
+
+  }
+}
+
+

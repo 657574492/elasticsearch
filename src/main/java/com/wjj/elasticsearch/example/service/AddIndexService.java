@@ -2,6 +2,7 @@ package com.wjj.elasticsearch.example.service;
 
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @Author: wangjunjie 2019/8/23 17:21
@@ -28,8 +30,9 @@ public class AddIndexService {
 
     public void addIndex() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
-        IndexRequest indexRequest = new IndexRequest("star", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        IndexRequest indexRequest = new IndexRequest("star");
+        indexRequest.id("11");
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
@@ -37,7 +40,7 @@ public class AddIndexService {
     public void addIndex2() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
         IndexRequest indexRequest = new IndexRequest("star2", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
@@ -45,8 +48,16 @@ public class AddIndexService {
     public void addIndex3() throws IOException {
         StarDocument starDocument = indexClassService.createStarDocument();
         IndexRequest indexRequest = new IndexRequest("star_completion", "_doc", starDocument.getUid());
-        String starIndex = GsonUtil.GsonString(starDocument);
+        String starIndex = GsonUtil.toJSONStringg(starDocument);
         indexRequest.source(starIndex,XContentType.JSON);
         rhlClient.index(indexRequest,RequestOptions.DEFAULT);
     }
+
+  /*  public void addBatch() {
+        BulkRequest bulkRequest = new BulkRequest();
+        for (int i = 0; i < 100; i++) {
+            bulkRequest.add();
+        }
+        rhlClient.bulkAsync()
+    }*/
 }

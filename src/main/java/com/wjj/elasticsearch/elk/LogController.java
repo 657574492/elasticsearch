@@ -44,6 +44,7 @@ public class LogController {
         return "success";
     }
 
+
     @GetMapping("/search/log")
     public String searchMessage() throws Exception {
 
@@ -72,7 +73,7 @@ public class LogController {
         for (SearchHit hit : hits) {
             System.out.println("------------------------");
             String hitString = hit.getSourceAsString();
-            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
+            Map<String, Object> map = GsonUtil.parseMap(hitString);
             String date = (String) map.get("@timestamp");
             System.out.println(date);
             //System.out.println(sdf.parse(date));

@@ -1,5 +1,6 @@
 package com.wjj.elasticsearch.example.service;
 
+import com.wjj.elasticsearch.example.domain.index.GoodsDocument;
 import com.wjj.elasticsearch.example.domain.index.StarDocument;
 import com.wjj.elasticsearch.example.util.GsonUtil;
 import org.apache.lucene.search.join.ScoreMode;
@@ -39,35 +40,16 @@ public class NestedService {
     private RestHighLevelClient rhlClient;
 
     /**
-     * 简单查询
-     *
-     * GET star_document/_search
-     * {
-     *   "query": {
-     *     "nested": {
-     *       "path": "productions",
-     *       "query": {
-     *         "term": {
-     *           "productions.name": {
-     *             "value": "咱们结婚吧"
-     *           }
-     *         }
-     *       }
-     *     }
-     *   }
-     * }
-     *
+     * 简单查询 (编号13)
      * @throws IOException
      */
     public void nestedService1() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 
         //productions nested对象名
-        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("productions.name", "咱们结婚吧");
-        NestedQueryBuilder nestedQueryBuilder = new NestedQueryBuilder("productions", termQueryBuilder, ScoreMode.None);
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("sku.skuData.attribute", "内存");
+        NestedQueryBuilder nestedQueryBuilder = new NestedQueryBuilder("sku.skuData", termQueryBuilder, ScoreMode.None);
         sourceBuilder.query(nestedQueryBuilder);
 
         searchRequest.source(sourceBuilder);
@@ -76,115 +58,59 @@ public class NestedService {
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
-            System.out.println(starDocument.toString());
+            GoodsDocument goodsDocument = GsonUtil.parse(hitString, GoodsDocument.class);
+            System.out.println(goodsDocument.toString());
         }
     }
 
     /**
-     * 简单查询
-     *
-     * GET star_document/_search
-     * {
-     *   "query": {
-     *     "nested": {
-     *       "path": "productions",
-     *       "query": {
-     *           "bool": {
-     *             "must": [
-     *               {
-     *                 "term": {
-     *                   "productions.name": {
-     *                     "value": "咱们结婚吧"
-     *                   }
-     *                 }
-     *               },
-     *               {
-     *                 "term": {
-     *                   "productions.type": {
-     *                     "value": "电视剧"
-     *                   }
-     *                 }
-     *               }
-     *             ]
-     *           }
-     *       }
-     *     }
-     *   }
-     * }
-     *
+     * 查询 (编号14)
      * @throws IOException
      */
     public void nestedService2() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 
+        //productions nested对象名
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        TermQueryBuilder queryBuilder1 = QueryBuilders.termQuery("productions.name", "咱们结婚吧");
-        TermQueryBuilder queryBuilder2 = QueryBuilders.termQuery("productions.type", "电视剧");
-        boolQueryBuilder.must(queryBuilder1);
-        boolQueryBuilder.must(queryBuilder2);
-
-        NestedQueryBuilder nestedQueryBuilder = new NestedQueryBuilder("productions", boolQueryBuilder, ScoreMode.None);
+        boolQueryBuilder.must(QueryBuilders.termQuery("sku.skuData.attribute", "内存"));
+        boolQueryBuilder.must(QueryBuilders.termsQuery("sku.skuData.value","16"));
+        NestedQueryBuilder nestedQueryBuilder = new NestedQueryBuilder("sku.skuData", boolQueryBuilder, ScoreMode.None);
         sourceBuilder.query(nestedQueryBuilder);
 
         searchRequest.source(sourceBuilder);
-        SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-        SearchHits hits = searchResponse.getHits();
+        SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = response.getHits();
 
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            StarDocument starDocument = GsonUtil.GsonToBean(hitString, StarDocument.class);
-            System.out.println(starDocument.toString());
+            GoodsDocument goodsDocument = GsonUtil.parse(hitString, GoodsDocument.class);
+            System.out.println(goodsDocument.toString());
         }
     }
 
 
     /**
-     * nested对象 聚合查询
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "productions": {
-     *       "nested": {
-     *         "path": "productions"
-     *       },
-     *       "aggs":{
-     *       "productions_name" : {
-     *         "terms": {
-     *           "field": "productions.type",
-     *           "size": 1
-     *         }
-     *       }
-     *     }
-     *
-     *     }
-     *
-     *   }
-     * }
+     * nested对象 聚合查询 (编号15)
      * @throws IOException
      */
     public void nestedService3() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 
-        NestedAggregationBuilder nestedAggregationBuilder = AggregationBuilders.nested("productions", "productions");
-        nestedAggregationBuilder.subAggregation(AggregationBuilders.terms("productions_type").field("productions" +
-                ".type").size(20));
+        NestedAggregationBuilder nestedAggregationBuilder = AggregationBuilders.nested("attribute", "sku.skuData");
+        nestedAggregationBuilder.subAggregation(AggregationBuilders.terms("attribute_type").field("sku.skuData.attribute" ).size(20));
         sourceBuilder.aggregation(nestedAggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = searchResponse.getAggregations();
 
-        ParsedNested parsedNested = aggregations.get("productions");
+        ParsedNested parsedNested = aggregations.get("attribute");
         long docCount = parsedNested.getDocCount();
         System.out.println(docCount);
 
-        Terms terms = parsedNested.getAggregations().get("productions_type");
+        Terms terms = parsedNested.getAggregations().get("attribute_type");
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         for (Terms.Bucket bucket : buckets) {
             System.out.println(bucket.getKey());

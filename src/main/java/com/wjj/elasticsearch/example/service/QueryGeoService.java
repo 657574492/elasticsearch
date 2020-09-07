@@ -77,7 +77,7 @@ public class QueryGeoService {
         SearchHits hits = response.getHits();
         for (SearchHit hit : hits) {
             String hitString = hit.getSourceAsString();
-            Map<String, Object> map = GsonUtil.GsonToMaps(hitString);
+            Map<String, Object> map = GsonUtil.parseMap(hitString);
             System.out.println(map);
         }
 

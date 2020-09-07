@@ -1,9 +1,6 @@
 package com.wjj.elasticsearch.example.util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +20,7 @@ public class GsonUtil {
     private static Gson gson = null;
     static {
         if (gson == null) {
-            gson = new Gson();
+            gson = new GsonBuilder().disableHtmlEscaping().create();
         }
     }
 
@@ -38,7 +35,7 @@ public class GsonUtil {
      * @param object
      * @return
      */
-    public static String GsonString(Object object) {
+    public static String toJSONStringg(Object object) {
         String gsonString = null;
         if (gson != null) {
             gsonString = gson.toJson(object);
@@ -54,7 +51,7 @@ public class GsonUtil {
      * @param cls
      * @return
      */
-    public static <T> T GsonToBean(String gsonString, Class<T> cls) {
+    public static <T> T parse(String gsonString, Class<T> cls) {
         T t = null;
         if (gson != null) {
             t = gson.fromJson(gsonString, cls);
@@ -63,21 +60,7 @@ public class GsonUtil {
     }
 
 
-    /**
-     * 转成list
-     * 泛型在编译期类型被擦除导致报错
-     * @param gsonString
-     * @param cls
-     * @return
-     */
-   /* public static <T> List<T> GsonToList(String gsonString, Class<T> cls) {
-        List<T> list = null;
-        if (gson != null) {
-            list = gson.fromJson(gsonString, new TypeToken<List<T>>() {
-            }.getType());
-        }
-        return list;
-    }*/
+
 
 
     /**
@@ -88,7 +71,7 @@ public class GsonUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> jsonToList(String json, Class<T> cls) {
+    public static <T> List<T> parseArray(String json, Class<T> cls) {
         Gson gson = new Gson();
         List<T> list = new ArrayList<T>();
         JsonArray array = new JsonParser().parse(json).getAsJsonArray();
@@ -107,7 +90,7 @@ public class GsonUtil {
      * @param gsonString
      * @return
      */
-    public static <T> List<Map<String, T>> GsonToListMaps(String gsonString) {
+    public static <T> List<Map<String, T>> parseArrayMap(String gsonString) {
         List<Map<String, T>> list = null;
         if (gson != null) {
             list = gson.fromJson(gsonString,
@@ -124,7 +107,7 @@ public class GsonUtil {
      * @param gsonString
      * @return
      */
-    public static <T> Map<String, T> GsonToMaps(String gsonString) {
+    public static <T> Map<String, T> parseMap(String gsonString) {
         Map<String, T> map = null;
         if (gson != null) {
             map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
@@ -134,20 +117,6 @@ public class GsonUtil {
     }
 
     public static void main(String[] args) {
-       /* Person person = new Person();
-        person.setName("王俊杰");
-        person.setMoney(200);
-        person.setAge(26);
-        person.setId(1);
-        List<String> list = person.getList();
-        list.add("高圆圆");
-        list.add("佟丽娅");
-        list.add("俞飞鸿");
-        String string = GsonString(person);
-        System.out.println(string);*/
 
-       /* Person person = GsonToBean("{\"id\":1,\"name\":\"王俊杰\",\"age\":26," +
-                "\"money\":200,\"list\":[\"高圆圆\",\"佟丽娅\",\"俞飞鸿\"]}", Person.class);
-        System.out.println(person);*/
     }
 }

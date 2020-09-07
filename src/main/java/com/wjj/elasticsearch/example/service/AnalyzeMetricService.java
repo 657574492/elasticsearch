@@ -30,29 +30,15 @@ public class AnalyzeMetricService {
 
     /**
      *
-     * 聚合查询metric 获取最小值
-     *
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "min_age": {
-     *       "min": {
-     *         "field": "age"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询metric 最小值（编号9）
      * @throws IOException
      */
     public void analyzeQuery1() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder = AggregationBuilders.min("min_age").field("age");
+        AggregationBuilder aggregationBuilder = AggregationBuilders.min("min_price").field("price");
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
@@ -61,46 +47,26 @@ public class AnalyzeMetricService {
         SearchHits hits = response.getHits();
 
         //查询的数据总数
-        //System.out.println("...total: "+hits.getTotalHits().value);
+        System.out.println("...total: "+hits.getTotalHits().value);
 
-        Map<String, Aggregation> asMap = response.getAggregations().asMap();
-        ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");
+        Aggregation aggregation = response.getAggregations().get("min_price");
+        ParsedMin parsedMin = (ParsedMin) aggregation;
 
         //获取查询结果
         System.out.println(parsedMin.getValue());
     }
 
     /**
-     *
-     * 聚合查询metric 多个字段
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "min_age": {
-     *       "min": {
-     *         "field": "age"
-     *       }
-     *     },
-     *     "max_age": {
-     *       "max": {
-     *         "field": "createDate"
-     *       }
-     *     }
-     *   }
-     *
-     * }
+     * 聚合查询metric 多个字段 （编号10）
      * @throws IOException
      */
     public void analyzeQuery2() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        AggregationBuilder aggregationBuilder1 = AggregationBuilders.min("min_age").field("age");
-        AggregationBuilder aggregationBuilder2 = AggregationBuilders.max("max_date").field("createDate");
+        AggregationBuilder aggregationBuilder1 = AggregationBuilders.min("min_price").field("price");
+        AggregationBuilder aggregationBuilder2 = AggregationBuilders.max("max_price").field("price");
         sourceBuilder.aggregation(aggregationBuilder1);
         sourceBuilder.aggregation(aggregationBuilder2);
 
@@ -109,51 +75,37 @@ public class AnalyzeMetricService {
 
         SearchHits hits = response.getHits();
 
-        //查询的数据总数 todo
-        //System.out.println("...total: "+hits.getTotalHits().value);
+        System.out.println("...total: "+hits.getTotalHits().value);
 
         Map<String, Aggregation> asMap = response.getAggregations().asMap();
-        ParsedMin parsedMin = (ParsedMin) asMap.get("min_age");
-        ParsedMax parsedMax = (ParsedMax) asMap.get("max_date");
+        ParsedMin parsedMin = (ParsedMin) asMap.get("min_price");
+        ParsedMax parsedMax = (ParsedMax) asMap.get("max_price");
 
         //获取查询结果
         System.out.println(parsedMin.getValue());
         System.out.println(parsedMax.getValue());
 
-        //如果值是long类型 将被转化为科学计数
-        //System.out.println(new BigDecimal(parsedMax.getValue()).toString());
+
     }
 
     /**
      *
-     * 聚合查询metric 一个字段所有数据 stats
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "stats_age": {
-     *       "stats": {
-     *         "field": "age"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询metric 一个字段所有数据 stats （编号11）
      * @throws IOException
      */
     public void analyzeQuery3() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        StatsAggregationBuilder aggregationBuilder = AggregationBuilders.stats("stats_age").field("age");
+        StatsAggregationBuilder aggregationBuilder = AggregationBuilders.stats("stats_price").field("price");
         sourceBuilder.aggregation(aggregationBuilder);
 
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-        Map<String, Aggregation> aggMap = searchResponse.getAggregations().asMap();
-        ParsedStats stats = (ParsedStats) aggMap.get("stats_age");
+        Aggregation aggregation = searchResponse.getAggregations().get("stats_price");
+        ParsedStats stats = (ParsedStats) aggregation ;
         System.out.println("avg:"+stats.getAvg()+" :"+
                 stats.getMax()+" :"+
                 stats.getMin()+" :"+
@@ -162,33 +114,20 @@ public class AnalyzeMetricService {
 
     /**
      *
-     * 聚合查询metric 一个字段不同数据的数量
-     * GET star_document/_search
-     * {
-     *   "size": 0,
-     *   "aggs": {
-     *     "cardinality_age": {
-     *       "cardinality": {
-     *         "field": "age"
-     *       }
-     *     }
-     *   }
-     * }
+     * 聚合查询metric 一个字段不同数据的数量 （编号12）
      * @throws IOException
      */
     public void analyzeQuery4() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("star_document");
-        searchRequest.types("_doc");
-
+        SearchRequest searchRequest = new SearchRequest("shop_goods");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.size(0);
 
-        CardinalityAggregationBuilder aggregationBuilder = AggregationBuilders.cardinality("cardinality_age").field("age");
+        CardinalityAggregationBuilder aggregationBuilder = AggregationBuilders.cardinality("cardinality_price").field("price");
         sourceBuilder.aggregation(aggregationBuilder);
         searchRequest.source(sourceBuilder);
         SearchResponse response = rhlClient.search(searchRequest, RequestOptions.DEFAULT);
-        Map<String, Aggregation> asMap = response.getAggregations().asMap();
-        ParsedCardinality cardinalityAge = (ParsedCardinality) asMap.get("cardinality_age");
+        Aggregation aggregation = response.getAggregations().get("cardinality_price");
+        ParsedCardinality cardinalityAge = (ParsedCardinality) aggregation;
         System.out.println(cardinalityAge.getValue());
     }
 }

@@ -49,5 +49,10 @@ public class AnalyzeBucketServiceTest {
         analyzeBucketService.analyzeQuery6();
     }
 
+    @Test
+    public void analyzeQuery7() throws IOException {
+        analyzeBucketService.analyzeQuery7();
+    }
+
 
 }
