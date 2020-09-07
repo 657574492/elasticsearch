@@ -51,9 +51,39 @@
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <!--配置logstash的ip和端口，在logstash配置文件中-->
         <destination>192.168.0.100:5044</destination>
-        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" >
-            elasticsearch-api %d [%thread] %-5level %logger{36} %line - %msg%n
+        <!--<encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appname":"es"}</customFields>
+        </encoder>-->
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        <!--输出日志可自定义，可根据自己需要配置-->
+                        {
+                        <!--es索引名称 -->
+                        "indexname":"test_logstash",
+                        <!--应用名称 -->
+                        "appname":"${spring.application.name}",
+                        <!--应用端口 -->
+                        "port": "${spring.application.index}",
+                        <!--打印时间 -->
+                        "timestamp": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        <!--线程名称 -->
+                        "thread": "%thread",
+                        <!--日志级别 -->
+                        "level": "%level",
+                        <!--日志名称 -->
+                        "logger_name": "%logger",
+                        <!--日志信息 -->
+                        "message": "%msg",
+                        <!--日志堆栈 -->
+                        "stack_trace": "%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
         </encoder>
+
     </appender>
 
 
